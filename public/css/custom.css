@@ -1,0 +1,26 @@
+.mdl-grid {
+  max-width: 1000px;
+}
+.title-image  {
+  height: 50px;
+  margin-right: 12px;
+}
+.mdl-layout.is-small-screen .title-image {
+  height: 46px;
+}
+.mdl-layout.is-small-screen .mobile-title {
+  display: block !important;
+  position: absolute;
+  left: calc(50% - 25px);
+  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.mdl-navigation.mdl-layout--large-screen-only .mdl-navigation__link {
+  display: inline-block;
+  height: 60px;
+  line-height: 68px;
+  background-color: transparent !important;
+  border-bottom: 4px solid transparent;
+}
+.mdl-navigation.mdl-layout--large-screen-only .mdl-navigation__link:hover {
+  border-bottom: 4px solid #ed1b2e;
+}
