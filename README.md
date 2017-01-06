@@ -2,6 +2,7 @@
 
 #### to do
 - main page content
+- document search page
 - document upload page
   - store metadata in database
   - send file to S3
