@@ -1,0 +1,24 @@
+<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+  <thead>
+    <tr>
+      <th class="mdl-data-table__cell--non-numeric">published</th>
+      <th class="mdl-data-table__cell--non-numeric">title</th>
+      <th class="mdl-data-table__cell--non-numeric">description</th>
+      <th class="mdl-data-table__cell--non-numeric">country</th>
+      <th class="mdl-data-table__cell--non-numeric">year</th>
+      <th class="mdl-data-table__cell--non-numeric">size</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each documents}}
+    <tr>
+      <td class="mdl-data-table__cell--non-numeric">{{published}}</td>
+      <td class="mdl-data-table__cell--non-numeric">{{title}}</td>
+      <td class="mdl-data-table__cell--non-numeric">{{description}}</td>
+      <td class="mdl-data-table__cell--non-numeric">{{country}}</td>
+      <td class="mdl-data-table__cell--non-numeric">{{year}}</td>
+      <td class="mdl-data-table__cell--non-numeric">{{size}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>

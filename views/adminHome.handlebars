@@ -1,0 +1,25 @@
+<div class="mdl-cell mdl-cell--12-col">
+
+{{#if user}}
+  <h5>Welcome {{user.user}}. You are logged in.</h5>
+  <p>You can now manage users and documents.</p>
+{{else}}
+  <div class="mdl-card">
+  	<form action="/login" method="POST">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="text" name="user" id="login-user">
+        <label class="mdl-textfield__label" for="login-user">User...</label>
+      </div>
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="password" name="password" id="login-password">
+        <label class="mdl-textfield__label" for="login-password">Password...</label>
+      </div>
+      <div class="mdl-card__actions">
+        <button class="mdl-button mdl-js-button mdl-button--colored">Log In</button>
+      </div>
+  	</form>
+  </div>
+{{/if}}
+
+
+</div>

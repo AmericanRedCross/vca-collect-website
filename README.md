@@ -1,16 +1,32 @@
 ### vca-collect-website
 
-#### to do
+- clone the git repository
+- `sudo npm install` to get all the node modules
+- adjust settings.js for your deployment
+- install [PM2](https://github.com/Unitech/pm2) `sudo npm install pm2 -g`
+  - other tools will let you keep the application up and running on your server (e.g. [Forever](https://github.com/foreverjs/forever))
+  - to have the app restart itself after a reboot, server downtime, etc., you can generate a startup script... check the [PM2 documentation](https://github.com/Unitech/pm2#startup-script-generation) on this for more details
+- `pm2 start app.js`
+- login (user: me / pass: 123), create a new user, and delete the default
+
+#### TODO
 - main page content
 - document search page
-- document upload page
-  - store metadata in database
-  - send file to S3
-  - "published" toggle that changes availability for download
-    - deliver files through the app server? or during the toggle process change the S3 location between shared/protected?
-- admin section behind login
-  - edit/add users
-  - approve uploads for download on main page
-  - session support stuff ? http://passportjs.org/docs ? https://github.com/expressjs/session ?
+- api to deliver document for download
 - multi-language support ? https://github.com/mashpie/i18n-node ? https://gist.github.com/mashpie/5246334 ?
+  - brainstorm how to make it not impossible to transition to multi-language
+    - content. flash messages? country names?
   - extended url should also be language specific
+- backup of document metadata (write a csv and save it to S3? just save a copy of the sqlite db to S3?f)
+- click on a row to edit instead of needing to click the icon?
+- allow changing the filename?
+- delete a document (keep records of deletions and a copy of all uploaded documents?)
+- adjustments
+  - clean up CSS
+  - clean up templates
+  - tune screen size style break
+  - resolution of ifrc logo
+- in the documents table, trim the description when not in the edit modal?
+- `/admin/documents` does poorly when building the table if there is only one document returned
+- for viz stuff, get logos of all NS?
+- allow edit of user passwords?

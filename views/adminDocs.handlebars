@@ -1,0 +1,189 @@
+
+
+<div class="mdl-cell mdl-cell--12-col">
+  <div id="loading"><div class="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div></div>
+  <div id="nodata">no documents</div>
+  <div id="table-div">
+
+  </div>
+
+  <hr>
+  {{#if error}}
+    <p><strong>FLASH!</strong> {{ error }}</p>
+  {{/if}}
+  {{#if success}}
+    <p><strong>FLASH!</strong> {{ success }}</p>
+  {{/if}}
+
+</div>
+
+
+<script>
+
+function editRow(rowid, el) {
+  $.get('/api/documents/' + rowid, function(response) {
+    var action = $("#documentform").attr("action").replace(":rowid", rowid);
+    $("#documentform").attr("action", action);
+    if(response.published === 1) {
+      $("#published-true").click();
+    } else {
+      $("#published-false").click();
+    }
+    $("#title").val(response.title);
+    $("#description").text(response.description);
+    $("#country").find('option').attr('selected',null);
+    $("#country").find('option[value=' + response.country + ']').attr('selected','selected');
+    $("#year").find('option').attr('selected',null);
+    $("#year").find('option[value=' + response.year + ']').attr('selected','selected');
+    $("#filename").find('span').text(response.key);
+    $("#size").find('span').text(response.size);
+
+    $("#modal").show()
+  });
+}
+
+window.onload = function() {
+
+  $("#loading").show();
+
+  $("#modal").find(".form-actions__cancel").click(function(e) {
+      e.preventDefault();
+      $("#modal").hide();
+  });
+
+  $.get('/api/documents', function(response) {
+    console.log(response)
+    $("#table-div").empty();
+    if(response.length === 0) {
+      $("#loading").hide();
+      $("#nodata").show();
+      return false;
+    }
+    // render headers
+    $("#table-div").html('<table data-sortable id="dataTable" class="compact nowrap stripe cell-border" cellspacing="0"><thead><tr></tr></thead><tbody></tbody></table>');
+    var header = response[0];
+    $("#dataTable thead tr").append("<th></th>")
+    for (field in header) {
+      if(field !== "rowid"){
+        $("#dataTable thead tr").append('<th>' + field + ' <br><input class="column-search" type="search" placeholder="search..." /></th>');
+      }
+    }
+    // render body of table
+    var tbody = $("#dataTable tbody")[0];
+    for (var i = 0; i < response.length; i++) {
+        var tr = document.createElement("tr");
+        var editRow = document.createElement("td");
+        var editBtnHtml = '<i onClick="editRow(' + response[i].rowid + ', this);" class="material-icons table-row__edit-btn">edit</i>';
+        $(editRow).html(editBtnHtml);
+        tr.appendChild(editRow);
+        for (field in response[i]) {
+          if(field !== "rowid"){
+            var td = document.createElement("td");
+            var cell = response[i][field];
+            if(field === "published" && cell === 0) { cell = "no"; }
+            if(field === "published" && cell === 1) { cell = "yes"; }
+            $(td)
+                .html(cell)
+                .attr("title", response[i][field]);
+            tr.appendChild(td);
+          }
+        }
+        tbody.appendChild(tr);
+    }
+    // initialize dataTable
+    table = $('#dataTable').DataTable({
+      scrollX: true,
+      "sDom":'lrtip',
+      "lengthMenu": [ 10, 50, 100 ],
+      "language": {
+        "lengthMenu": "Display _MENU_ records",
+        "info": "Showing _START_ to _END_ of _TOTAL_ records",
+      },
+      // first column is the edit button, so disable sort
+      "columnDefs": [
+        { "orderable": false, "targets": 0 }
+      ]
+    });
+
+    $("#loading").hide();
+
+    // stop a click in the search input box from triggering a sort on the column
+    $('.column-search').on('click', function(e){
+      e.stopPropagation();
+    });
+
+    // initialize column search functionality
+    table.columns().every( function() {
+      var that = this;
+      $('input', this.header() ).on('keyup change', function(){
+        if( that.search() !== this.value ){
+          that
+          .search( this.value )
+          .draw();
+        }
+      });
+    });
+
+    // if too few columns the body columns center while the header rows stay left
+    // if that's the case, shrink the table wrapper
+    if($('#table-div thead').width() < $("#table-div").width()){
+      $("#table-div").width($('#table-div thead').width())
+    }
+
+    // need a custom scroll bar that is always visible
+    // so user can x-scroll the table even if they only have a mouse (i.e. no touchpad)
+    $("<div id='myslider'></div>").insertAfter(".dataTables_scroll")
+    slider = document.getElementById('myslider');
+    noUiSlider.create(slider, {
+    	start: [null, null],
+    	connect: true,
+      behaviour: "drag-fixed",
+    	range: {
+    		'min': 0,
+    		'max': 1
+    	}
+    });
+
+    function sizeSlider(){
+      var view = $(".dataTables_scrollBody").width(); // screen window width
+      var full = $("#dataTable").width(); // full width
+      // hide slider if there is no overflow
+      if(view >= full){ $(slider).hide(); } else { $(slider).show(); }
+      var viewMin = $(".dataTables_scrollBody").scrollLeft();
+      var viewMax = viewMin + view;
+      slider.noUiSlider.updateOptions({
+    		start: [viewMin, viewMax],
+        range: {
+    			'min': 0,
+    			'max': full
+    		}
+    	});
+    }
+    $(window).resize(function() {
+      sizeSlider();
+    });
+    sizeSlider();
+
+    // update the slider position when the div is scrolled via direct interaction
+    var divScroll = function(){
+      var viewMin = $(".dataTables_scrollBody").scrollLeft();
+      var view = $(".dataTables_scrollBody").width(); // visible width
+      var viewMax = viewMin + view;
+      slider.noUiSlider.set([viewMin, viewMax]);
+    }
+    $(".dataTables_scrollBody").on('scroll', divScroll);
+    // update the table view when the slider is dragged
+    slider.noUiSlider.on('slide', function(values, handle, unencoded){
+      $(".dataTables_scrollBody").off('scroll', divScroll) // turn off the direct interaction scroll listener to keep things smooth
+      $(".dataTables_scrollBody").scrollLeft(Math.round(unencoded[0])) // move the view based on the new slider position
+      $(".dataTables_scrollBody").css("overflow-x", "hidden") // prevent the browser scrollbar from showing
+    });
+    slider.noUiSlider.on('end', function(){
+      $(".dataTables_scrollBody").on('scroll', divScroll); // after done dragging the slider turn back on the direct interaction scroll listener
+      $(".dataTables_scrollBody").css("overflow-x", "auto"); // turn back on the browser scroll styling
+    })
+
+  });
+}
+
+</script>
