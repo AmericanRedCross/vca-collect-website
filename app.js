@@ -277,6 +277,36 @@ app.get('/api/documents/:rowid', function(req, res) {
   }
 });
 
+app.get('/api/file/:rowid', function(req, res) {
+  var query = "SELECT * FROM documents WHERE rowid = " + req.params.rowid;
+  db.get(query, function(err, row) {
+    if(row.published === 1) {
+      var key = row.filename;
+      var params = {
+        Bucket: settings.app.s3bucket,
+        Key: key
+      };
+      s3.getObject(params, function(err, data) {
+        // if (err) console.log(err, err.stack); // an error occurred
+        // else     console.log(data);           // successful response
+        if(err) {
+          res.json(err, err.stack);
+        } else {
+          var buffer = Buffer.from(data.Body);
+          res.writeHead(200, {
+            'Content-Type': data.ContentType,
+            'Content-Disposition': "attachment;filename=" + key,
+            'Content-Length': data.ContentLength
+          });
+          res.end(buffer);
+        }
+      });
+    } else {
+      res.json("requested document is not published")
+    }
+  });
+});
+
 app.post('/api/documents/:rowid', function(req, res) {
   if(req.user) {
     var method = req.body["_method"].toUpperCase();
