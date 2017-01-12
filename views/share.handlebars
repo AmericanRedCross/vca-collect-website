@@ -36,7 +36,7 @@
     </div>
 
       <div class="mdl-card__actions">
-        <button class="form-actions__submit mdl-button mdl-js-button">Submit</button>
+        <button class="form-actions__submit mdl-button mdl-js-button"><i class="material-icons">check</i> Submit</button>
         <button class="form-actions__clear mdl-button mdl-js-button">Clear form</button>
       </div>
   </form>
@@ -58,6 +58,10 @@ var clearForm = function(){
 
 window.onload = function() {
   var upload = $("#upload");
+  upload.find(".form-actions__clear").click(function(e) {
+      e.preventDefault();
+      clearForm();
+  });
   upload.submit(function() {
     $(this).ajaxSubmit({
       beforeSubmit: function(){
