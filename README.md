@@ -15,7 +15,6 @@
   - http://foundation.zurb.com/sites/docs/responsive-navigation.html
 - main page content
 - document search page
-- api to deliver document for download
 - multi-language support ? https://github.com/mashpie/i18n-node ? https://gist.github.com/mashpie/5246334 ?
   - brainstorm how to make it not impossible to transition to multi-language
     - content. flash messages? country names?
@@ -23,7 +22,7 @@
 - backup of document metadata (write a csv and save it to S3? just save a copy of the sqlite db to S3?f)
 - click on a row to edit instead of needing to click the icon?
 - allow changing the filename?
-- delete a document (keep records of deletions and a copy of all uploaded documents?)
+- keep records of deletions and a copy of all uploaded documents?
 - adjustments
   - clean up CSS
   - clean up templates
