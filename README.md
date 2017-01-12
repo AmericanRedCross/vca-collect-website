@@ -10,6 +10,9 @@
 - login (user: me / pass: 123), create a new user, and delete the default
 
 #### TODO
+- switch to foundation (or bootstrap?) from MDL
+  - http://foundation.zurb.com/templates.html
+  - http://foundation.zurb.com/sites/docs/responsive-navigation.html
 - main page content
 - document search page
 - api to deliver document for download
@@ -27,6 +30,5 @@
   - tune screen size style break
   - resolution of ifrc logo
 - in the documents table, trim the description when not in the edit modal?
-- `/admin/documents` does poorly when building the table if there is only one document returned
 - for viz stuff, get logos of all NS?
 - allow edit of user passwords?

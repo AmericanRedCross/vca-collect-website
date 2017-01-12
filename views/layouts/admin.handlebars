@@ -59,10 +59,20 @@
         <div id="size">Size: <span></span></div>
       </div>
       <div class="mdl-card__actions">
-        <button class="form-actions__submit mdl-button mdl-js-button">Submit</button>
+        <button class="form-actions__submit mdl-button mdl-js-button"><i class="material-icons">check</i> Submit</button>
         <button class="form-actions__cancel mdl-button mdl-js-button">Cancel</button>
       </div>
     </form>
+    <br>
+    <form id="deleteform" action="/api/documents/:rowid" method="POST">
+      <div class="mdl-card__actions">
+      <input type="hidden" name="_method" value="DELETE" />
+      <button class="form-actions__submit mdl-button mdl-js-button">
+        <i class="material-icons">delete</i> Delete Document</button>
+      </div>
+    </form>
+
+
   </div>
 </div>
 

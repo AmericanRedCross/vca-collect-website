@@ -79,10 +79,10 @@ var updateDocsRow = function(req, res) {
     // if(err)
     if(this.changes) {
       req.flash('successMessage', 'Row updated!');
-      res.redirect('/admin/documents')
+      res.redirect('/admin/documents');
     } else {
       req.flash('errorMessage', 'Apologies, it seems something went wrong.');
-      res.redirect('/admin/documents')
+      res.redirect('/admin/documents');
     }
   });
 }
@@ -100,10 +100,10 @@ var createUser = function(req, res) {
           // if(err)
           if(this.lastID) {
             req.flash('successMessage', 'User created!');
-            res.redirect('/admin/users')
+            res.redirect('/admin/users');
           } else {
             req.flash('errorMessage', 'Apologies, it seems something went wrong.');
-            res.redirect('/admin/users')
+            res.redirect('/admin/users');
           }
         });
       });
@@ -282,7 +282,7 @@ app.post('/api/documents/:rowid', function(req, res) {
     var method = req.body["_method"].toUpperCase();
     switch(method) {
       case "DELETE":
-        // ...
+        deleteDoc(req, res);
         break;
       case "PUT":
         updateDocsRow(req, res);
@@ -301,6 +301,44 @@ var AWS = require('aws-sdk');
 var s3 = new AWS.S3();
 var moment = require('moment');
 
+var removeFromS3 = function(key, cb) {
+  var params = {
+    Bucket: settings.app.s3bucket,
+    Key: key
+  };
+  s3.deleteObject(params, function(err, data) {
+    // if (err) console.log(err, err.stack);
+    // else     console.log(data);
+    cb(err, data);
+  });
+}
+
+var deleteDoc = function(req, res) {
+  var rowid = req.params.rowid;
+  var selectQuery = "SELECT * FROM documents WHERE rowid = " + rowid;
+  db.get(selectQuery, function(err, row) {
+    var key = row.filename;
+    var deleteQuery = "DELETE FROM documents WHERE rowid = " + rowid;
+    db.run(deleteQuery, function(err) {
+      if(this.changes) {
+        req.flash('successMessage', 'Entry removed from table of records.');
+        removeFromS3(key, function(err, data){
+          if(err) {
+            req.flash('errorMessage', 'Apologies, it seems something went wrong deleting the file from S3 storage.');
+            res.redirect('/admin/documents');
+          } else {
+            req.flash('successMessage', 'File deleted from S3.');
+            res.redirect('/admin/documents');
+          }
+        })
+      } else {
+        req.flash('errorMessage', 'Apologies, it seems something went wrong removing the entry from the table.');
+        res.redirect('/admin/documents');
+      }
+    });
+  });
+}
+
 var upload = multer({
   storage: multerS3({
     s3: s3,
@@ -315,12 +353,12 @@ var upload = multer({
 });
 
 app.post('/upload', upload.single('vcaFile'), function(req, res) {
-  var query = "INSERT INTO documents (title, description, country, year, _size, _filename) VALUES (" +
+  var query = "INSERT INTO documents (title, description, country, year, size, filename) VALUES (" +
     "'" + req.body.title.replace("'","''") + "', " +
     "'" + req.body.description.replace("'","''") + "', " +
     "'" + req.body.country.replace("'","''") + "', " +
     "'" + req.body.year.replace("'","''") + "', " +
-    "'" + common.formatBytes(req.file.size, 1) + "', " +
+    "'" + formatBytes(req.file.size, 1) + "', " +
     "'" + req.file.key.replace("'","''") + "') ";
     // TODO: make a function to getting string values ready for inclusion in sql queries
   db.run(query, function(err) {

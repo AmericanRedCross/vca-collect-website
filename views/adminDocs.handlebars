@@ -24,6 +24,8 @@ function editRow(rowid, el) {
   $.get('/api/documents/' + rowid, function(response) {
     var action = $("#documentform").attr("action").replace(":rowid", rowid);
     $("#documentform").attr("action", action);
+    var action = $("#deleteform").attr("action").replace(":rowid", rowid);
+    $("#deleteform").attr("action", action);
     if(response.published === 1) {
       $("#published-true").click();
     } else {
