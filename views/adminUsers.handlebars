@@ -1,61 +1,62 @@
-<div class="mdl-cell mdl-cell--12-col">
-
-  <div class="mdl-card mdl-shadow--4dp">
-    <div class="mdl-card__title">
-      <h2 class="mdl-card__title-text">Create a new user</h2>
-    </div>
-    <div class="mdl-card__actions">
-      <form action="/user" method="POST">
-        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-          <input class="mdl-textfield__input" type="text" name="user" pattern="[a-zA-Z0-9]+" required>
-          <label class="mdl-textfield__label" >User...</label>
-          <span class="mdl-textfield__error">Only letters or numbers.</span>
-        </div>
-        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-          <input class="mdl-textfield__input" type="password" name="password" required>
-          <label class="mdl-textfield__label" >Password...</label>
-        </div>
-        <div class="mdl-card__actions">
-          <button class="mdl-button mdl-js-button mdl-button--colored">Create</button>
-        </div>
-      </form>
-    </div>
+<div class="row">
+  <div class="small-8 small-offset-2 medium-6 medium-offset-3 columns">
+    {{#if error}}
+      <div class="callout warning" data-closable>
+        <span><strong>Error: </strong> {{ error }}</span>
+        <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {{/if}}
+    {{#if success}}
+      <div class="callout success" data-closable>
+        <span><strong>Success: </strong> {{ success }}</span>
+        <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {{/if}}
   </div>
+</div>
 
-  <hr>
+<div class="row">
+  <div class="small-8 small-offset-2 medium-6 medium-offset-3 columns">
+    <h4>Create a new user</h4>
+    <form action="/user" method="POST">
+      <label> User
+        <input type="text" name="user" pattern="[a-zA-Z0-9]+" placeholder="..." aria-describedby="userHelpText">
+      </label>
+      <p class="help-text" id="userHelpText">User must be only letters and numbers.</p>
+      <label> Password
+        <input type="password" name="password" placeholder="...">
+      </label>
+      <button type="submit" value="submit" class="button">Create</button>
+    </form>
+  </div>
+</div>
 
-{{#if error}}
-  <p><strong>FLASH!</strong> {{ error }}</p>
-{{/if}}
-{{#if success}}
-  <p><strong>FLASH!</strong> {{ success }}</p>
-{{/if}}
-
-  <hr>
-
-  <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-    <thead>
-      <tr>
-        <th class="mdl-data-table__cell--non-numeric">User</th>
-        <th class="mdl-data-table__cell--non-numeric">Delete</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each users}}
-      <tr>
-        <td class="mdl-data-table__cell--non-numeric">{{user}}</td>
-        <td>
-          <form action="/user" method="POST">
-            <input type="hidden" name="_method" value="DELETE" />
-            <input type="hidden" name="user" value="{{user}}" />
-            <button class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">delete</i></button>
-
-          </form>
-        </td>
-      </tr>
-      {{/each}}
-    </tbody>
-  </table>
-
-
+<div class="row">
+  <div class="small-10 small-offset-1 medium-6 medium-offset-3 columns">
+    <hr>
+    <h4>Remove an existing user</h4>
+    <table>
+      <thead>
+        <tr><th>User</th><th>Delete</th></tr>
+      </thead>
+      <tbody>
+        {{#each users}}
+        <tr>
+          <td>{{user}}</td>
+          <td>
+            <form action="/user" method="POST">
+              <input type="hidden" name="_method" value="DELETE" />
+              <input type="hidden" name="user" value="{{user}}" />
+              <button type="submit" value="submit" class="button small alert" style="margin:0;">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
 </div>

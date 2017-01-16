@@ -1,6 +1,3 @@
-.redText{
-  color: #ed1b2e;
-}
 .custom-navigation__top-bar {
   padding: 0;
   text-transform: uppercase;
@@ -15,4 +12,7 @@
 .custom-navigation__top-bar a {
   text-decoration: none;
   color: inherit;
+}
+.custom-navigation_spacer {
+  height: 60px;
 }
