@@ -1,6 +1,9 @@
 node_modules
 site.db
 sessions.db
+_site
+notes/
+css/gulp.css
 
 # OS generated files #
 ######################

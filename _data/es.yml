@@ -1,0 +1,27 @@
+####################
+## HEADER CONTENT ##
+####################
+
+nav_home:
+  text:           "Inicio"
+  url:            "/es/"
+nav:
+  # - text:         "Inicio"
+  #   url:          "/es/"
+  - text:         "Encontrar"
+    url:          "/es/encontrar/"
+  - text:         "Compartir"
+    url:          "/es/compartir/"
+
+
+
+
+
+about:
+  movement:       "Movimiento Internacional de la Cruz Roja y de la Media Luna Roja"
+
+find:
+  title: "Spanish find page"
+
+share:
+    title: "Spanish share page"

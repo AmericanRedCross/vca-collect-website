@@ -1,0 +1,18 @@
+.redText{
+  color: #ed1b2e;
+}
+.custom-navigation__top-bar {
+  padding: 0;
+  text-transform: uppercase;
+}
+.custom-navigation__link  {
+  background-color: transparent !important;
+  border-bottom: 4px solid transparent;
+}
+.custom-navigation__link:hover {
+  border-bottom: 4px solid #ed1b2e;
+}
+.custom-navigation__top-bar a {
+  text-decoration: none;
+  color: inherit;
+}

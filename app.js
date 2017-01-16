@@ -178,10 +178,10 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.engine('handlebars', exphbs({defaultLayout: 'admin'}));
 app.set('view engine', 'handlebars');
 
-app.use(express.static('public'));
+app.use(express.static('_site'));
 
 app.post('/login', passport.authenticate('local', {
     failureRedirect: '/admin'
@@ -196,32 +196,8 @@ app.post('/logout', function(req, res) {
 	})
 });
 
-app.get('/', function(req, res) {
-	res.render('home',{
-		opts: settings.website
-	});
-});
-
-app.get('/find', function(req, res) {
-  db.all('SELECT * FROM documents', function(err, rows) {
-    if(err) { console.log(err); }
-    res.render('find',{
-      opts: settings.website,
-      documents: rows
-    });
-  });
-});
-
-app.get('/share', function(req, res) {
-	res.render('share',{
-		opts: settings.website,
-    countries: settings.countries
-	});
-});
-
 app.get('/admin', function(req, res) {
 		res.render('adminHome',{
-      layout:'admin',
 			user:req.user,
 			opts:settings.website
 		});
@@ -231,7 +207,6 @@ app.get('/admin/users', function(req, res) {
   if(req.user) {
     db.all('SELECT user FROM users', function(err, rows) {
       res.render('adminUsers',{
-        layout:'admin',
         user:req.user,
         opts:settings.website,
         users:rows,
@@ -247,7 +222,6 @@ app.get('/admin/users', function(req, res) {
 app.get('/admin/documents', function(req, res) {
   if(req.user) {
     res.render('adminDocs',{
-      layout:'admin',
       user:req.user,
       opts:settings.website,
       countries: settings.countries,

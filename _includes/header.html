@@ -1,0 +1,29 @@
+<div data-sticky-container>
+  <div class="top-bar custom-navigation__top-bar" data-sticky data-options="marginTop:0;" style="width:100%">
+    <div class="top-bar-left">
+      <ul class="menu">
+        <li><a class="custom-navigation__link" href="{{site.data[locale].nav_home.url}}">{{site.data[locale].nav_home.text}}</a></li>
+      <ul>
+    </div>
+    <div class="top-bar-right">
+      <ul class="dropdown menu" data-dropdown-menu>
+        {% for nav in site.data[locale].nav %}
+          {% if nav.url %}
+            <li><a class="custom-navigation__link" href="{{nav.url}}">{{nav.text}}</a></li>
+          {% endif %}
+        {% endfor %}
+            <li>
+              <a href="#">{{locale}}</a>
+              <ul class="menu">
+                {% for loc in site.authorized_locales %}
+                {% assign pg = site.pages | where:"lang",{{loc}} | where:"id",page.id | first %}
+                <li>
+                  <a href="{{site.baseurl}}{{pg.url}}">{{loc}}</a>
+                </li>
+                {% endfor %}
+              </ul>
+            </li>
+      </ul>
+    </div>
+  </div>
+</div>

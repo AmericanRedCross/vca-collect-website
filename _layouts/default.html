@@ -1,0 +1,22 @@
+<!doctype html>
+<html class="no-js" lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+
+  <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
+  <link rel="stylesheet" href="/css/gulp.css">
+  <link rel="stylesheet" href="/css/nouislider.css">
+
+</head>
+<body>
+
+{{ content }}
+
+
+{% include js.html %}
+
+</body>
+</html>

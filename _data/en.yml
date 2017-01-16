@@ -1,0 +1,27 @@
+####################
+## HEADER CONTENT ##
+####################
+
+nav_home:
+  text:           "Home"
+  url:            "/"
+nav:
+  # - text:         "Home"
+  #   url:          "/"
+  - text:         "Find"
+    url:          "/find/"
+  - text:         "Share"
+    url:          "/share/"
+
+
+
+
+
+about:
+  movement:       "International Red Cross and Red Crescent Movement"
+
+find:
+  title: "English find page"
+
+share:
+    title: "English share page"
