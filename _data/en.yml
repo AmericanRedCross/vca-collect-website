@@ -12,13 +12,33 @@ nav:
 
 
 
-
-
 about:
   movement:       "International Red Cross and Red Crescent Movement"
 
 find:
-  title: "English find page"
+  header:     "Find page (EN)"
+  about:      "The user will be able to filter and search the uploaded VCAs on this page."
+
 
 share:
-    title: "English share page"
+  prompt:     "Upload a VCA (EN)"
+  fileBtn:    "Select file"
+  fileHelp:   "(accepted file types are .doc, .docx, and .pdf)"
+  yearPrompt: "Select year VCA was completed..."
+  countryPrompt: "Select a country..."
+
+common:
+  cancel:     "Cancel"
+  clearForm:  "Clear form"
+  country:    "Country"
+  description: "Description"
+  download:   "Download"
+  error:      "Error"
+  false:      "False"
+  filename:   "File name"
+  fileSize:   "File size"
+  submit:     "Submit"
+  success:    "Success"
+  title:      "Title"
+  true:       "True"
+  year:       "Year"

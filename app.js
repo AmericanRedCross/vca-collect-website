@@ -3,6 +3,7 @@ var fs = require('fs');
 var path = require('path');
 var crypto = require('crypto');
 var sqlite3 = require('sqlite3');
+var babyparse = require('babyparse');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var bcrypt = require('bcrypt');
@@ -48,6 +49,33 @@ db.run('CREATE TABLE IF NOT EXISTS documents ( ' +
   'size TEXT, ' +
   'filename STRING, ' +
   'description TEXT' + ' )', function(err) { if(err) { console.log(err); } });
+
+  // initialize db table for country list
+  db.run('CREATE TABLE IF NOT EXISTS countries ( id INTEGER PRIMARY KEY AUTOINCREMENT, code TEXT, en TEXT, es TEXT, fr TEXT )', function(err) {
+      if(err) { console.log(err); }
+      db.get('SELECT code from countries', function(err, row) {
+        if(err) { console.log(err); }
+        if(!row) {
+          fs.readFile('./_data/countries.csv', 'utf8', function(err, data) {
+            if(err) { console.log(err); }
+            var parsed = babyparse.parse(data, { header: true });
+            var countries = parsed.data;
+            for(var i=0, len=countries.length; i<len; i++) {
+              var columns = [],
+                  values = [];
+              for(key in countries[i]) {
+                columns.push(key);
+                values.push(countries[i][key].replace("'","''"));
+              }
+              var query = 'INSERT INTO countries ( '+ columns.join(",") + " ) VALUES('" + values.join("','") + "')";
+              db.run(query, function(err) {
+                if(err) { console.log(err); }
+              });
+            }
+          });
+        }
+      });
+  });
 
 // db functions
 var getDocs = function(req, cb) {
@@ -125,6 +153,13 @@ var deleteUser = function(req, res) {
       }
     });
   }
+}
+
+var getCountries = function(req, cb) {
+  var query = "SELECT * FROM countries";
+  db.all(query, function(err, rows) {
+    cb(err, rows);
+  });
 }
 
 // setting up user authentication
@@ -234,12 +269,12 @@ app.get('/admin/documents', function(req, res) {
 });
 
 app.get('/api/documents', function(req, res) {
-  if(req.user) {
+  // if(req.user) {
     getDocs(req, function(err, data) {
       if(err) { console.log(err); }
       res.json(data);
     });
-  }
+  // }
 });
 
 app.get('/api/documents/:rowid', function(req, res) {
@@ -298,6 +333,12 @@ app.post('/api/documents/:rowid', function(req, res) {
   }
 });
 
+app.get('/api/countries', function(req, res) {
+  getCountries(req, function(err, data) {
+    if(err) { console.log(err); }
+    res.json(data);
+  });
+});
 
 var multer  = require('multer');
 var multerS3 = require('multer-s3');
@@ -366,9 +407,11 @@ app.post('/upload', upload.single('vcaFile'), function(req, res) {
     "'" + req.file.key.replace("'","''") + "') ";
     // TODO: make a function to getting string values ready for inclusion in sql queries
   db.run(query, function(err) {
-    if(err) { console.log(err); }
-    res.json({ message: "uploaded with rowid: " + this.lastID })
-    // TODO: maybe change this to a flash message instead of the loading icon and whatnot currently used on the share page
+    if(err) {
+      res.json({ type: "error", message: err })
+    } else {
+      res.json({ type: "success", message: "uploaded with rowid: " + this.lastID })
+    }
   });
 });
 

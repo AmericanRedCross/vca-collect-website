@@ -1,0 +1,46 @@
+<div id="modal" class="reveal" data-reveal>
+  <form id="documentform" action="/api/documents/:rowid" method="POST">
+    <input type="hidden" name="_method" value="PUT" />
+
+      <fieldset>
+        <legend>Published:</legend>
+        <input id="published-false" type="radio" class="mdl-radio__button" name="published" value="0">
+        <label for="published-false">False</label>
+        <input id="published-true" type="radio" class="mdl-radio__button" name="published" value="1">
+        <label for="published-true">True</label>
+      </fieldset>
+      <label>Title:
+        <input id="title" type="text" name="title" placeholder="..." value="null" required>
+      </label>
+      <label>Descrition:
+        <textarea id="description" type="text" name="description" placeholder="..." rows= "3" required>null</textarea>
+      </label>
+      <label>Country:
+        <select id="country" name="country" required>
+          <option selected disabled hidden style="display: none" value="">Select the country...</option>
+        </select>
+      </label>
+      <label>Year:
+        <select id="year" name="year" required>
+          <option selected disabled hidden style="display: none" value="">Select year VCA was completed...</option>
+          <option value="2017">2017</option><option value="2016">2016</option><option value="2015">2015</option><option value="2014">2014</option><option value="2013">2013</option><option value="2012">2012</option><option value="2011">2011</option><option value="2010">2010</option><option value="2009">2009</option><option value="2008">2008</option><option value="2007">2007</option><option value="2006">2006</option><option value="2005">2005</option><option value="2004">2004</option><option value="2003">2003</option><option value="2002">2002</option><option value="2001">2001</option><option value="2000">2000</option><option value="1999">1999</option><option value="1998">1998</option><option value="1997">1997</option><option value="1996">1996</option><option value="1995">1995</option><option value="1994">1994</option><option value="1993">1993</option><option value="1992">1992</option><option value="1991">1991</option><option value="1990">1990</option><option value="1989">1989</option><option value="1988">1988</option>
+        </select>
+      </label>
+      <div id="filename">File name: <span></span></div>
+      <div id="size">File size: <span></span></div>
+      <button type="submit" value="submit" class="button primary form-actions__submit">
+        <i class="fa fa-check" aria-hidden="true"></i> Submit
+      </button>
+      <button id="modal__close" class="button secondary" data-close>
+        <i class="fa fa-ban" aria-hidden="true"></i> Cancel
+      </button>
+  </form>
+
+  <form id="deleteform" action="/api/documents/:rowid" method="POST">
+      <input type="hidden" name="_method" value="DELETE" />
+      <button type="submit" value="submit" class="button alert">
+        <i class="fa fa-trash-o" aria-hidden="true"></i> Delete Document</button>
+
+    </form>
+
+</div>

@@ -5,7 +5,8 @@
 - `npm install` to get all the node modules
 - install [Jekyll](https://jekyllrb.com/docs/installation/)
 - install Gulp `npm install -g gulp`
-- compile sass and build static site (gulp task not setup yet)
+- compile sass and build static site with default gulp task `gulp`
+  - to watch for changes and have browser sync run use `gulp dev`
 - adjust settings.js for your deployment
 - install [PM2](https://github.com/Unitech/pm2) `sudo npm install pm2 -g`
   - other tools will let you keep the application up and running on your server (e.g. [Forever](https://github.com/foreverjs/forever))
@@ -14,11 +15,9 @@
 - login (user: me / pass: 123), create a new user, and delete the default
 
 #### TODO
-- separate gulp tasks for dev versus production
-- switch to foundation (or bootstrap?) from MDL
-  - http://foundation.zurb.com/templates.html
-  - http://foundation.zurb.com/sites/docs/responsive-navigation.html
 - main page content
+  - add a D3 map
+- style things
 - document search page
 - multi-language support for country names?
 - backup of document metadata (write a csv and save it to S3? just save a copy of the sqlite db to S3?f)

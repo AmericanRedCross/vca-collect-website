@@ -1,7 +1,7 @@
 
-
-<div class="mdl-cell mdl-cell--12-col">
-  <div id="loading"><div class="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div></div>
+<div class="row expanded">
+  <div class="column">
+  <div id="loading"><i class="fa fa-spinner fa-spin form-actions__spinner" style="font-size:48px;"></i></div>
   <div id="nodata">no documents</div>
   <div id="table-div">
 
@@ -15,12 +15,13 @@
     <p><strong>FLASH!</strong> {{ success }}</p>
   {{/if}}
 
+  </div>
 </div>
 
 
 <script>
 
-function editRow(rowid, el) {
+function editRow(rowid) {
   $.get('/api/documents/' + rowid, function(response) {
     var action = $("#documentform").attr("action").replace(":rowid", rowid);
     $("#documentform").attr("action", action);
@@ -37,21 +38,54 @@ function editRow(rowid, el) {
     $("#country").find('option[value=' + response.country + ']').attr('selected','selected');
     $("#year").find('option').attr('selected',null);
     $("#year").find('option[value=' + response.year + ']').attr('selected','selected');
-    $("#filename").find('span').text(response.key);
+    $("#filename").find('span').text(response.filename);
     $("#size").find('span').text(response.size);
 
-    $("#modal").show()
+    $('#modal').foundation('open');
+  });
+}
+
+function sizeSlider(){
+  var view = $(".dataTables_scrollBody").width(); // screen window width
+  var full = $("#dataTable").width(); // full width
+  // hide slider if there is no overflow
+  if(view >= full){ $(slider).hide(); } else { $(slider).show(); }
+  var viewMin = $(".dataTables_scrollBody").scrollLeft();
+  var viewMax = viewMin + view;
+  slider.noUiSlider.updateOptions({
+    start: [viewMin, viewMax],
+    range: {
+      'min': 0,
+      'max': full
+    }
   });
 }
 
 window.onload = function() {
 
+  resize = $(window).resize(function() {
+    sizeSlider();
+  });
+
   $("#loading").show();
 
-  $("#modal").find(".form-actions__cancel").click(function(e) {
-      e.preventDefault();
-      $("#modal").hide();
+  $.get("/api/countries", function(data) {
+    for(var i=0, len=data.length; i<len; i++) {
+      var country = data[i]["en"];
+      var html = '<option value="' + data[i].code + '">' + country + '</option>';
+      $("#country").append(html);
+    }
   });
+
+  $("#modal__close").click(function(e) {
+      e.preventDefault();
+  });
+
+  $(window).on(
+    'closed.zf.reveal', function() {
+      console.log("'closeAll.zf.Reveal' fired.");
+    }
+  );
 
   $.get('/api/documents', function(response) {
     console.log(response)
@@ -75,7 +109,7 @@ window.onload = function() {
     for (var i = 0; i < response.length; i++) {
         var tr = document.createElement("tr");
         var editRow = document.createElement("td");
-        var editBtnHtml = '<i onClick="editRow(' + response[i].rowid + ', this);" class="material-icons table-row__edit-btn">edit</i>';
+        var editBtnHtml = '<i onClick="editRow(' + response[i].rowid + ');" class="fa fa-pencil-square-o table-row__edit-btn" aria-label="edit document metadata"></i>';
         $(editRow).html(editBtnHtml);
         tr.appendChild(editRow);
         for (field in response[i]) {
@@ -96,7 +130,9 @@ window.onload = function() {
     table = $('#dataTable').DataTable({
       scrollX: true,
       "sDom":'lrtip',
-      "lengthMenu": [ 10, 50, 100 ],
+      "lengthChange": false,
+      "pageLength": 10,
+      // "lengthMenu": [ 10, 50, 100 ],
       "language": {
         "lengthMenu": "Display _MENU_ records",
         "info": "Showing _START_ to _END_ of _TOTAL_ records",
@@ -146,24 +182,7 @@ window.onload = function() {
     	}
     });
 
-    function sizeSlider(){
-      var view = $(".dataTables_scrollBody").width(); // screen window width
-      var full = $("#dataTable").width(); // full width
-      // hide slider if there is no overflow
-      if(view >= full){ $(slider).hide(); } else { $(slider).show(); }
-      var viewMin = $(".dataTables_scrollBody").scrollLeft();
-      var viewMax = viewMin + view;
-      slider.noUiSlider.updateOptions({
-    		start: [viewMin, viewMax],
-        range: {
-    			'min': 0,
-    			'max': full
-    		}
-    	});
-    }
-    $(window).resize(function() {
-      sizeSlider();
-    });
+
     sizeSlider();
 
     // update the slider position when the div is scrolled via direct interaction

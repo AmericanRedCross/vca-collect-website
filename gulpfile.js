@@ -10,7 +10,7 @@ var siteRoot = '_site';
 
 var sassInput = './_includes/stylesheets/*.scss';
 var sassOptions = {
-  includePaths: ['./node_modules/foundation-sites/scss'],
+  includePaths: ['./node_modules/foundation-sites/scss','./node_modules/font-awesome/scss' ],
   errLogToConsole: true,
   outputStyle: 'expanded'
 };
@@ -24,6 +24,15 @@ gulp.task('sass', function() {
     .pipe(sass(sassOptions).on('error', sass.logError))
     .pipe(autoprefixer(autoprefixerOptions))
     .pipe(gulp.dest('./css'));
+});
+
+gulp.task('icons', function() {
+  return gulp.src('./node_modules/font-awesome/fonts/**.*')
+    .pipe(gulp.dest('./fonts'));
+});
+
+gulp.task('build', function() {
+  return child.spawn('jekyll', ['build']);
 });
 
 gulp.task('jekyll', function() {
@@ -57,4 +66,5 @@ gulp.task('serve', function() {
   gulp.watch(sassInput, ['sass']);
 });
 
-gulp.task('default', ['sass', 'jekyll', 'serve']);
+gulp.task('dev', ['sass', 'icons', 'jekyll', 'serve']);
+gulp.task('default', ['sass', 'build']);

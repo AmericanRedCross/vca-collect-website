@@ -12,13 +12,29 @@ nav:
 
 
 
-
-
 about:
   movement:       "Movimiento Internacional de la Cruz Roja y de la Media Luna Roja"
 
 find:
-  title: "Spanish find page"
+  header:     "Find page (ES)"
+
 
 share:
-    title: "Spanish share page"
+  prompt:     "Upload a VCA (ES)"
+  fileBtn:    "Select file"
+  fileHelp:   "(accepted file types are .doc, .docx, and .pdf)"
+  yearPrompt: "Select year VCA was completed..."
+  countryPrompt: "Select a country..."
+
+common:
+  clearForm:  "Clear form"
+  country:    "Country"
+  description: "Description"
+  download:   "Download"
+  error:      "Error"
+  filename:   "File name"
+  fileSize:   "File size"
+  submit:     "Submit"
+  success:    "Success"
+  title:      "Title"
+  year:       "Year"

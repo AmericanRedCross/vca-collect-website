@@ -1,3 +1,48 @@
-<div class="column row">
-  <h1>{{site.data[locale].find.title}}</h1>
+
+
+<div class="row">
+  <div class="small-12 medium-8 medium-offset-2 columns">
+    <h4>{{site.data[locale].find.header}}</h4>
+    <p>{{site.data[locale].find.about}}</p>
+    <table id="documents">
+      <thead>
+        <tr>
+          <th>{{site.data[locale].common.title}}</th>
+          <th>{{site.data[locale].common.country}}</th>
+          <th>{{site.data[locale].common.description}}</th>
+          <th>{{site.data[locale].common.year}}</th>
+          <th>{{site.data[locale].common.fileSize}}</th>
+          <th>{{site.data[locale].common.download}}</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
 </div>
+
+<script>
+
+window.onload = function() {
+  $.get("/api/documents", function(data) {
+    console.log(data)
+    for(var i=0, len=data.length; i<len; i++) {
+      var row = "<tr>" +
+        "<td>" + data[i].title + "</td>" +
+        "<td>" + data[i].country + "</td>" +
+        "<td>" + data[i].description + "</td>" +
+        "<td>" + data[i].year + "</td>" +
+        "<td>" + data[i].size + "</td>";
+        if(data[i].published === 1) {
+          row += '<td><a href="/api/file/' + data[i].rowid + '" download><i class="fa fa-download" aria-hidden="true"></i></a></td>';
+        } else {
+          row += "<td>no</td>";
+        }
+        row += "</tr>";
+      $("#documents tbody").append(row);
+    }
+
+  });
+}
+
+</script>
