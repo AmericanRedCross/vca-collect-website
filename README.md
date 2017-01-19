@@ -1,5 +1,6 @@
 ### vca-collect-website
 
+- add AWS crentials info at `~/.aws/credentials`
 - install [Node and npm](http://nodejs.org/)
 - clone the git repository
 - `npm install` to get all the node modules
@@ -13,9 +14,11 @@
   - to have the app restart itself after a reboot, server downtime, etc., you can generate a startup script... check the [PM2 documentation](https://github.com/Unitech/pm2#startup-script-generation) on this for more details
 - `pm2 start app.js`
 - login (user: me / pass: 123), create a new user, and delete the default
+- if using nginx you'll likely need to add `client_max_body_size 50M;` or whatever size value
 
 #### TODO
 - main page content
+- `gulp` doesn't appear to set everything up correctly
 - style things
   - clean up CSS
   - clean up templates

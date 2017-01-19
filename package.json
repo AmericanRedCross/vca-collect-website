@@ -21,6 +21,7 @@
     "express-flash": "0.0.2",
     "express-handlebars": "^3.0.0",
     "express-session": "^1.14.2",
+    "font-awesome": "^4.7.0",
     "foundation-sites": "^6.3.0",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.1",
@@ -30,6 +31,7 @@
     "multer": "^1.2.1",
     "multer-s3": "^2.5.0",
     "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
     "path": "^0.12.7"
   }
 }

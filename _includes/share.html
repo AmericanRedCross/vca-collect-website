@@ -83,7 +83,7 @@ window.onload = function() {
     $(this).ajaxSubmit({
       beforeSubmit: function() {
         $(".form-actions__spinner").show();
-        $("form-actions__submit").addClass("disabled");
+        $(".form-actions__submit").addClass("disabled");
         return true;
       },
       error: function(xhr) {
