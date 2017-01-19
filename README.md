@@ -32,3 +32,4 @@
 - in the documents table, trim the description when not in the edit modal?
 - for viz stuff, get logos of all NS?
 - allow edit of user passwords?
+- tables don't display correctly at small screen size
