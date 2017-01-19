@@ -17,6 +17,7 @@ about:
 
 find:
   header:     "Find page (ES)"
+  about:      "The user will be able to filter and search the uploaded VCAs on this page."
 
 
 share:
@@ -27,14 +28,23 @@ share:
   countryPrompt: "Select a country..."
 
 common:
+  cancel:     "Cancelar"
   clearForm:  "Clear form"
-  country:    "Country"
-  description: "Description"
-  download:   "Download"
+  country:    "País"
+  description: "Descripción"
+  download:   "Descargar"
   error:      "Error"
+  false:      "False"
   filename:   "File name"
   fileSize:   "File size"
-  submit:     "Submit"
+  submit:     "Entregar"
   success:    "Success"
-  title:      "Title"
-  year:       "Year"
+  title:      "Título"
+  true:       "True"
+  year:       "Año"
+
+dev:
+    lorem1:   "Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró hacer un libro de textos especimen. No sólo sobrevivió 500 años, sino que tambien ingresó como texto de relleno en documentos electrónicos, quedando esencialmente igual al original."
+    lorem2:   "Fue popularizado en los 60s con la creación de las hojas 'Letraset', las cuales contenian pasajes de Lorem Ipsum, y más recientemente con software de autoedición, como por ejemplo Aldus PageMaker, el cual incluye versiones de Lorem Ipsum."
+    lorem3:   "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam mollis turpis vel nibh dignissim auctor. Pellentesque condimentum tellus in augue maximus, id vestibulum mauris semper. Nulla at ipsum rhoncus libero blandit varius id non felis. Phasellus euismod diam eu odio fringilla facilisis. Duis eleifend ante ac ipsum congue, et laoreet enim malesuada. Nullam eleifend, sem non lacinia sagittis, dolor erat molestie sem, a cursus mauris sapien nec ligula."
+    lorem4:   "Fusce euismod felis id finibus consectetur. Aliquam sit amet elit mauris. Nullam vitae convallis tellus, ut ornare leo. Donec congue pellentesque iaculis. Sed scelerisque urna purus, ut semper nunc luctus ac. Ut blandit sollicitudin ligula, sit amet lacinia eros eleifend ac. Mauris laoreet ornare sapien, non consequat mi feugiat in. Fusce sagittis nibh auctor, rutrum ligula sed, feugiat massa. Interdum et malesuada fames ac ante ipsum primis in faucibus."

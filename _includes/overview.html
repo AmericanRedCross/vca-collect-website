@@ -1,0 +1,176 @@
+<div id="tooltip"></div>
+
+<div class="row">
+  <div class="small-4 column">
+    <div id="overview__fact1" class="overview_fact"></div>
+  </div>
+  <div class="small-4 column">
+    <div id="overview__fact2" class="overview_fact"></div>
+  </div>
+  <div class="small-4 column">
+    <div id="overview__fact3" class="overview_fact"></div>
+  </div>
+</div>
+
+<!-- TODO: remove this temporary spacer  -->
+<div style="height:24px;"></div>
+
+<div class="row">
+  <div class="columns">
+    <div id="overview_map"></div>
+  </div>
+</div>
+
+<!-- TODO: remove this temporary spacer  -->
+<div style="height:24px;"></div>
+
+
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="/js/d3-geo-projection.v1.min.js"></script>
+<script src="/js/topojson.v2.min.js"></script>
+<script src="/js/colorbrewer.min.js"></script>
+<script>
+
+d3.selection.prototype.moveToFront = function() {
+  return this.each(function(){
+    this.parentNode.appendChild(this);
+  });
+};
+
+// TODO: cleanup variables (need for global vs local)
+var svg, projection, path, countries;
+var defaultFill = '#d7d7d8';
+var width, height;
+
+function setDimensions(){
+  width = document.getElementById('overview_map').offsetWidth-100;
+  if(width / 2 <= window.innerHeight - 60) {
+    height = width / 2;
+  } else {
+    height = window.innerHeight - 60;
+    width = height * 2;
+  }
+}
+
+function setup(){
+  projection = d3.geoKavrayskiy7()
+    .translate([0, 0])
+    .scale(width / 2 / Math.PI);
+  path = d3.geoPath()
+      .projection(projection);
+  svg = d3.select("#overview_map").append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .append("g")
+      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+  countries = svg.append("g").classed("map-countries", true);
+}
+
+// TODO: change styling so that the light red/pink countries aren't lost
+var quantize = d3.scaleQuantize()
+    .domain([0, 10])
+    .range(colorbrewer.Reds[9]);
+    // Every ColorBrewer Scale
+    // http://bl.ocks.org/mbostock/raw/5577023/
+
+function grabData(error, geo, docs) {
+  documents = docs;
+  countryCounts = d3.nest()
+    .key(function(d) { return d.country; })
+    .rollup(function(v) { return d3.sum(v, function(d) { return 1; }); })
+    .map(docs);
+  world = topojson.feature(geo, geo.objects.ne_50m).features;
+  giveStats();
+  drawLayers();
+}
+
+// TODO: determine actual facts, and move any text into the template + locale data
+function giveStats() {
+  var fact1 = "<h5>" + documents.length + " VCA reports have been uploaded.</h5>";
+  var fact2 = "<h5>" + "The reports are from " + countryCounts.size() + " countries.</h5>";
+  var fact3 = "<h5>" + d3.sum(documents, function(d) { return d.published }) + " reports are available for download.</h5>";
+  $("#overview__fact1").html(fact1);
+  $("#overview__fact2").html(fact2);
+  $("#overview__fact3").html(fact3);
+}
+
+function drawLayers() {
+  country = countries.selectAll("d").data(world);
+  country.enter().insert("path")
+      .attr("class", "country")
+      .attr("d", path)
+      .style("fill", defaultFill)
+      .on("mouseover", function(d){
+        populateMapTooltip(d, this);
+        d3.select(this).moveToFront();
+        d3.select(this).classed("country__focus", true);
+      })
+      .on("mouseout", function(d){
+        d3.select(this).classed("country__focus", false);
+        $('#tooltip').empty();
+      });
+  updateMapColors()
+}
+
+function updateMapColors() {
+  quantize.domain(d3.extent(d3.values(countryCounts)));
+  if(quantize.domain()[0] === 0 && quantize.domain()[1] === 0) {quantize.domain([0,1])}
+  countries.selectAll('.country').each(function(d,i){
+    var thisCount = countryCounts.get(d.properties.iso);
+    if(!thisCount) {
+      d3.select(this).style("fill", function(d){
+        return defaultFill;
+      });
+    } else {
+      d3.select(this)
+      .attr('data-count', thisCount)
+      .style("fill", function(d){
+        return quantize(thisCount);
+      });
+    }
+  });
+}
+
+function populateMapTooltip(d, el){
+  var tooltipText = "<span>" + d.properties.name;
+  var count = d3.select(el).attr('data-count');
+  tooltipText += count ? '<span> - ' + count + ' VCA' : '<span>';
+  tooltipText += (count>1) ? 's</span>' : '</span>';
+  tooltipText += "</span>";
+  $('#tooltip').append(tooltipText);
+}
+
+window.onload = function() {
+  setDimensions();
+  setup();
+  d3.queue()
+  	.defer(d3.json, '/data/ne_50m-simple-topo.json')
+  	.defer(d3.json, '/api/documents')
+  	.await(grabData);
+  $('body').mouseover(function(e) {
+      //Set the X and Y axis of the tooltip
+      $('#tooltip').css('top', e.pageY + 10 );
+      $('#tooltip').css('left', e.pageX + 20 );
+    }).mousemove(function(e) {
+      //Keep changing the X and Y axis for the tooltip, thus, the tooltip move along with the mouse
+      $("#tooltip").css({top:(e.pageY+15)+"px",left:(e.pageX+20)+"px"});
+  });
+}
+
+function redraw() {
+  setDimensions();
+  d3.select("#overview_map").select('svg').remove();
+  setup();
+  drawLayers();
+}
+
+d3.select(window).on("resize", throttle);
+var throttleTimer;
+function throttle() {
+    window.clearTimeout(throttleTimer);
+    throttleTimer = window.setTimeout(function() {
+    redraw();
+  }, 200);
+}
+
+</script>

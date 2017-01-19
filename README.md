@@ -16,18 +16,16 @@
 
 #### TODO
 - main page content
-  - add a D3 map
 - style things
+  - clean up CSS
+  - clean up templates
 - document search page
 - multi-language support for country names?
 - backup of document metadata (write a csv and save it to S3? just save a copy of the sqlite db to S3?f)
 - click on a row to edit instead of needing to click the icon?
 - allow changing the filename?
 - keep records of deletions and a copy of all uploaded documents?
-- adjustments
-  - clean up CSS
-  - clean up templates
-  - resolution of ifrc logo
+- resolution of ifrc logo
 - in the documents table, trim the description when not in the edit modal?
 - for viz stuff, get logos of all NS?
 - allow edit of user passwords?
