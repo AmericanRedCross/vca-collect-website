@@ -56,7 +56,7 @@ db.run('CREATE TABLE IF NOT EXISTS documents ( ' +
       db.get('SELECT code from countries', function(err, row) {
         if(err) { console.log(err); }
         if(!row) {
-          fs.readFile('./_data/countries.csv', 'utf8', function(err, data) {
+          fs.readFile('./data/countries.csv', 'utf8', function(err, data) {
             if(err) { console.log(err); }
             var parsed = babyparse.parse(data, { header: true });
             var countries = parsed.data;
