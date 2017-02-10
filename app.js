@@ -43,7 +43,10 @@ db.run('CREATE TABLE IF NOT EXISTS users ( id INTEGER PRIMARY KEY AUTOINCREMENT,
 db.run('CREATE TABLE IF NOT EXISTS documents ( ' +
   'rowid INTEGER PRIMARY KEY AUTOINCREMENT, ' +
   'published INTEGER DEFAULT 0, ' +
+  'type TEXT, ' +
   'country TEXT, ' +
+  'community TEXT, ' +
+  'org TEXT, ' +
   'title TEXT, ' +
   'year INTEGER, ' +
   'size TEXT, ' +
@@ -157,6 +160,13 @@ var deleteUser = function(req, res) {
 
 var getCountries = function(req, cb) {
   var query = "SELECT * FROM countries";
+  db.all(query, function(err, rows) {
+    cb(err, rows);
+  });
+}
+
+var getCommunities = function(req, cb) {
+  var query = "SELECT DISTINCT community FROM documents WHERE country='" + req.params.iso + "'" ;
   db.all(query, function(err, rows) {
     cb(err, rows);
   });
@@ -340,6 +350,13 @@ app.get('/api/countries', function(req, res) {
   });
 });
 
+app.get('/api/communities/:iso', function(req, res) {
+  getCommunities(req, function(err, data) {
+    if(err) { console.log(err); }
+    res.json(data);
+  });
+});
+
 var multer  = require('multer');
 var multerS3 = require('multer-s3');
 var AWS = require('aws-sdk');
@@ -397,15 +414,35 @@ var upload = multer({
   })
 });
 
+db.run('CREATE TABLE IF NOT EXISTS documents ( ' +
+  'rowid INTEGER PRIMARY KEY AUTOINCREMENT, ' +
+  'published INTEGER DEFAULT 0, ' +
+  'country TEXT, ' +
+  'community TEXT, ' +
+  'org TEXT, ' +
+  'title TEXT, ' +
+  'year INTEGER, ' +
+  'size TEXT, ' +
+  'filename STRING, ' +
+  'description TEXT' + ' )', function(err) { if(err) { console.log(err); } });
+
 app.post('/upload', upload.single('vcaFile'), function(req, res) {
-  var query = "INSERT INTO documents (title, description, country, year, size, filename) VALUES (" +
-    "'" + req.body.title.replace("'","''") + "', " +
-    "'" + req.body.description.replace("'","''") + "', " +
+  var community = "";
+  if(req.body.community === "_new"){
+    community = req.body.community_new.replace("'","''");
+  } else {
+    community = req.body.community;
+  }
+  var query = "INSERT INTO documents (type, country, community, title, year, size, filename, description) VALUES (" +
+    "'" + req.body.type.replace("'","''") + "', " +
     "'" + req.body.country.replace("'","''") + "', " +
+    "'" + community + "', " +
+    "'" + req.body.title.replace("'","''") + "', " +
     "'" + req.body.year.replace("'","''") + "', " +
     "'" + formatBytes(req.file.size, 1) + "', " +
-    "'" + req.file.key.replace("'","''") + "') ";
-    // TODO: make a function to getting string values ready for inclusion in sql queries
+    "'" + req.file.key.replace("'","''") + "', " +
+    "'" + req.body.description.replace("'","''") + "') ";
+    // TODO: make a function to getting string values ready for inclusion in sql queries and figure that out
   db.run(query, function(err) {
     if(err) {
       res.json({ type: "error", message: err })

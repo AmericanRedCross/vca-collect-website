@@ -21,15 +21,19 @@ find:
 
 
 share:
-  prompt:     "Upload a VCA (EN)"
+  prompt:     "Upload (EN)"
   fileBtn:    "Select file"
   fileHelp:   "(accepted file types are .doc, .docx, and .pdf)"
   yearPrompt: "Select year VCA was completed..."
   countryPrompt: "Select a country..."
+  commPrompt:  "Select a community..."
+  commAdd:     "Add a new community"
 
 common:
+  allFieldsErr: "Please complete all form fields."
   cancel:     "Cancel"
   clearForm:  "Clear form"
+  community:  "Community"
   country:    "Country"
   description: "Description"
   download:   "Download"
@@ -40,6 +44,7 @@ common:
   submit:     "Submit"
   success:    "Success"
   title:      "Title"
+  type:       "Type"
   true:       "True"
   year:       "Year"
 

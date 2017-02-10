@@ -21,27 +21,32 @@ find:
 
 
 share:
-  prompt:     "Upload a VCA (ES)"
+  prompt:     "Upload (EN)"
   fileBtn:    "Select file"
   fileHelp:   "(accepted file types are .doc, .docx, and .pdf)"
   yearPrompt: "Select year VCA was completed..."
   countryPrompt: "Select a country..."
+  commPrompt:  "Select a community..."
+  commAdd:     "Add a new community"
 
 common:
-  cancel:     "Cancelar"
+  allFieldsErr: "Please complete all form fields."
+  cancel:     "Cancel"
   clearForm:  "Clear form"
-  country:    "País"
-  description: "Descripción"
-  download:   "Descargar"
+  community:  "Community"
+  country:    "Country"
+  description: "Description"
+  download:   "Download"
   error:      "Error"
   false:      "False"
   filename:   "File name"
   fileSize:   "File size"
-  submit:     "Entregar"
+  submit:     "Submit"
   success:    "Success"
-  title:      "Título"
+  title:      "Title"
+  type:       "Type"
   true:       "True"
-  year:       "Año"
+  year:       "Year"
 
 dev:
     lorem1:   "Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró hacer un libro de textos especimen. No sólo sobrevivió 500 años, sino que tambien ingresó como texto de relleno en documentos electrónicos, quedando esencialmente igual al original."
