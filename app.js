@@ -44,7 +44,7 @@ db.run('CREATE TABLE IF NOT EXISTS documents ( ' +
   'rowid INTEGER PRIMARY KEY AUTOINCREMENT, ' +
   'published INTEGER DEFAULT 0, ' +
   'type TEXT, ' +
-  'country TEXT, ' +
+  'iso3 TEXT, ' +
   'community TEXT, ' +
   'org TEXT, ' +
   'title TEXT, ' +
@@ -54,9 +54,9 @@ db.run('CREATE TABLE IF NOT EXISTS documents ( ' +
   'description TEXT' + ' )', function(err) { if(err) { console.log(err); } });
 
   // initialize db table for country list
-  db.run('CREATE TABLE IF NOT EXISTS countries ( id INTEGER PRIMARY KEY AUTOINCREMENT, code TEXT, en TEXT, es TEXT, fr TEXT )', function(err) {
+  db.run('CREATE TABLE IF NOT EXISTS countries ( id INTEGER PRIMARY KEY AUTOINCREMENT, iso3 TEXT, iso2 TEXT, en TEXT, fr TEXT, es TEXT, ns TEXT, zone TEXT )', function(err) {
       if(err) { console.log(err); }
-      db.get('SELECT code from countries', function(err, row) {
+      db.get('SELECT iso3 from countries', function(err, row) {
         if(err) { console.log(err); }
         if(!row) {
           fs.readFile('./data/countries.csv', 'utf8', function(err, data) {
@@ -165,8 +165,15 @@ var getCountries = function(req, cb) {
   });
 }
 
+var getActiveCountries = function(req, cb ) {
+  var query  = "SELECT *, COUNT(*) FROM documents GROUP BY iso3 INNER JOIN countries ON documents.iso3 = countries.iso3"
+  db.all(query, function(err, rows) {
+    cb(err, rows);
+  });
+}
+
 var getCommunities = function(req, cb) {
-  var query = "SELECT DISTINCT community FROM documents WHERE country='" + req.params.iso + "'" ;
+  var query = "SELECT DISTINCT community FROM documents WHERE iso3='" + req.params.iso3 + "'" ;
   db.all(query, function(err, rows) {
     cb(err, rows);
   });
@@ -350,7 +357,14 @@ app.get('/api/countries', function(req, res) {
   });
 });
 
-app.get('/api/communities/:iso', function(req, res) {
+app.get('/api/activecountries', function(req, res) {
+  getActiveCountries(req, function(err, data) {
+    if(err) { console.log(err); }
+    res.json(data);
+  });
+});
+
+app.get('/api/communities/:iso3', function(req, res) {
   getCommunities(req, function(err, data) {
     if(err) { console.log(err); }
     res.json(data);
@@ -414,17 +428,6 @@ var upload = multer({
   })
 });
 
-db.run('CREATE TABLE IF NOT EXISTS documents ( ' +
-  'rowid INTEGER PRIMARY KEY AUTOINCREMENT, ' +
-  'published INTEGER DEFAULT 0, ' +
-  'country TEXT, ' +
-  'community TEXT, ' +
-  'org TEXT, ' +
-  'title TEXT, ' +
-  'year INTEGER, ' +
-  'size TEXT, ' +
-  'filename STRING, ' +
-  'description TEXT' + ' )', function(err) { if(err) { console.log(err); } });
 
 app.post('/upload', upload.single('vcaFile'), function(req, res) {
   var community = "";
@@ -433,9 +436,9 @@ app.post('/upload', upload.single('vcaFile'), function(req, res) {
   } else {
     community = req.body.community;
   }
-  var query = "INSERT INTO documents (type, country, community, title, year, size, filename, description) VALUES (" +
+  var query = "INSERT INTO documents (type, iso3, community, title, year, size, filename, description) VALUES (" +
     "'" + req.body.type.replace("'","''") + "', " +
-    "'" + req.body.country.replace("'","''") + "', " +
+    "'" + req.body.iso3.replace("'","''") + "', " +
     "'" + community + "', " +
     "'" + req.body.title.replace("'","''") + "', " +
     "'" + req.body.year.replace("'","''") + "', " +
