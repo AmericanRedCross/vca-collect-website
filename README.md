@@ -1,4 +1,4 @@
-### setup
+## Setup
 - add AWS crentials info at `~/.aws/credentials`
 - install [Node and npm](http://nodejs.org/)
 - clone the git repository
