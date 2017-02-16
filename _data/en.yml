@@ -1,33 +1,36 @@
-####################
-## HEADER CONTENT ##
-####################
+#############
+## English ##
+#############
 
-nav:
-  - text:         "Home"
-    url:          "/"
-  - text:         "Find"
-    url:          "/find/"
-  - text:         "Share"
-    url:          "/share/"
-
-
+meta:
+  siteName:   "VCA repository"
+  language:   "en"
 
 about:
-  movement:       "International Red Cross and Red Crescent Movement"
+  movement:   "International Red Cross and Red Crescent Movement"
+  header1:    "About this Website"
+  text1a:     "This repository has been developed by the IFRC together with the Global Disaster Preparedness Center to facilitate the collection of VCA reports and Plans of Action from the Red Cross / Red Crescent Movement. The site allows users to upload, search for and access VCA reports and Plans of Action from VCAs that were conducted by the communities with the National Societies and other partners worldwide."
+  text1b:     "The repository serves National Societies and their communities as an archive of VCA reports, highlighting the collective use and impact of the methodology and indicating gap areas in the use of the methodology across different communities. National Societies can use this site to collect and consolidate their VCA reports and Plans of Action to have a historic repository of their work and be able to access relevant information for longer-term monitoring of risks and vulnerabilities or to feed into the situational awareness in case of an emergency."
+  header2:    "About the Vulnerability Capacity Assessment (VCA)"
+  text2a:     "The Vulnerable Capacity Assessment (VCA) is a process designed to accompany communities to be more resilient through the identification and assessment of their priority needs. The VCA provides a toolkit for community-lead assessments and solution finding processes that integrate information on existing risks, vulnerabilities and capacities and form the basis for successful community-based programming."
+  text2b:     "The VCA allows the Red Cross Red Crescent National Societies to contextualize each step of the programming cycle to ensure it is focused on communities. Through this process, VCAs help to empower communities by making them risk-informed and building ownership in the identification and development of solutions to increase resilience."
+  text2c:     "The first VCA guide was created in 1999 at the request of National Societies, and it supports the IFRC’s core mandate to serve the most vulnerable. It was endorsed in 1999 by the General Assembly. Since its inception, the VCA has been successfully used around the globe by the IFRC and numerous external partners."
+  text2d:     "It is a vital, participatory, community-driven process that contributes to the ongoing efforts of the IFRC and member National Societies, as they the work with local communities to define needs and develop solutions to reduce vulnerabilities and strengthen community resilience."
 
 find:
   header:     "Find page (EN)"
   about:      "The user will be able to filter and search the uploaded VCAs on this page."
 
-
 share:
-  prompt:     "Upload (EN)"
+  sharePrompt: "Upload (EN)"
   fileBtn:    "Select file"
   fileHelp:   "(accepted file types are .doc, .docx, and .pdf)"
-  yearPrompt: "Select year VCA was completed..."
+  titlePrompt: "Title of document"
+  countryLabel: "Country where activities occurred"
   countryPrompt: "Select a country..."
-  commPrompt:  "Select a community..."
-  commAdd:     "Add a new community"
+  commPrompt: "Select a community..."
+  commAdd:    "Add a new community"
+  yearPrompt: "Select year VCA was completed..."
 
 common:
   allFieldsErr: "Please complete all form fields."
@@ -47,9 +50,3 @@ common:
   type:       "Type"
   true:       "True"
   year:       "Year"
-
-dev:
-    lorem1:   "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged."
-    lorem2:   "It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-    lorem3:   "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam mollis turpis vel nibh dignissim auctor. Pellentesque condimentum tellus in augue maximus, id vestibulum mauris semper. Nulla at ipsum rhoncus libero blandit varius id non felis. Phasellus euismod diam eu odio fringilla facilisis. Duis eleifend ante ac ipsum congue, et laoreet enim malesuada. Nullam eleifend, sem non lacinia sagittis, dolor erat molestie sem, a cursus mauris sapien nec ligula."
-    lorem4:   "Fusce euismod felis id finibus consectetur. Aliquam sit amet elit mauris. Nullam vitae convallis tellus, ut ornare leo. Donec congue pellentesque iaculis. Sed scelerisque urna purus, ut semper nunc luctus ac. Ut blandit sollicitudin ligula, sit amet lacinia eros eleifend ac. Mauris laoreet ornare sapien, non consequat mi feugiat in. Fusce sagittis nibh auctor, rutrum ligula sed, feugiat massa. Interdum et malesuada fames ac ante ipsum primis in faucibus."

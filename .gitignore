@@ -1,9 +1,10 @@
 node_modules
+notes/*
 site.db
 sessions.db
-_site
-notes/
-css/gulp.css
+public/fonts/*
+!public/fonts/README.md
+public/css/gulp.css
 
 # OS generated files #
 ######################

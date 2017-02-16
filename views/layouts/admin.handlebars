@@ -4,17 +4,16 @@
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="{{settings.nginxlocation}}images/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="{{settings.nginxlocation}}images/favicon.ico" type="image/x-icon">
   <title></title>
 
   <link rel="stylesheet" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
   <link rel="stylesheet" href="/css/nouislider.min.css">
-  <link rel="stylesheet" href="/css/gulp.css">
+  <link rel="stylesheet" href="{{settings.nginxlocation}}css/gulp.css">
 
 </head>
 <body>
-
-{{> modalEditDoc}}
 
 <div data-sticky-container>
   <div class="title-bar" data-responsive-toggle="navigation-menu" data-hide-for="medium">

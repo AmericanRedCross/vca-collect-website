@@ -1,6 +1,8 @@
 var settings = require('./settings.js');
 var fs = require('fs');
 var path = require('path');
+var flow = require('flow');
+var yaml = require('js-yaml');
 var crypto = require('crypto');
 var sqlite3 = require('sqlite3');
 var babyparse = require('babyparse');
@@ -25,13 +27,13 @@ fs.existsSync(file);
 var db = new sqlite3.Database(file);
 
 // initialize db table for admin users
-db.run('CREATE TABLE IF NOT EXISTS users ( id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT, password TEXT )', function(err) {
+db.run("CREATE TABLE IF NOT EXISTS users ( id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT, password TEXT, permissions TEXT )", function(err) {
     if(err) { console.log(err); }
-    db.get('SELECT user from users', function(err, row) {
+    db.get("SELECT user from users", function(err, row) {
       if(err) { console.log(err); }
       if(!row) {
         bcrypt.hash(settings.app.defaultpass, saltRounds, function(err, hash) {
-          db.run('INSERT INTO users ( user, password ) VALUES( ?, ? )', settings.app.defaultuser, hash, function(err) {
+          db.run("INSERT INTO users ( user, password, permissions ) VALUES( ?, ?, 'admin' )", settings.app.defaultuser, hash, function(err) {
             if(err) { console.log(err); }
           });
         });
@@ -59,7 +61,7 @@ db.run('CREATE TABLE IF NOT EXISTS documents ( ' +
       db.get('SELECT iso3 from countries', function(err, row) {
         if(err) { console.log(err); }
         if(!row) {
-          fs.readFile('./data/countries.csv', 'utf8', function(err, data) {
+          fs.readFile('./_data/countries.csv', 'utf8', function(err, data) {
             if(err) { console.log(err); }
             var parsed = babyparse.parse(data, { header: true });
             var countries = parsed.data;
@@ -80,7 +82,10 @@ db.run('CREATE TABLE IF NOT EXISTS documents ( ' +
       });
   });
 
-// db functions
+// # DATABASE FUNCTIONS
+// ####################
+
+// # DB FUNCTIONS FOR DOC MANAGEMENT
 var getDocs = function(req, cb) {
   var query = "SELECT * FROM documents";
   db.all(query, function(err, rows) {
@@ -118,22 +123,24 @@ var updateDocsRow = function(req, res) {
   });
 }
 
+// # DB FUNCTIONS FOR USER MANAGEMENT
 var createUser = function(req, res) {
   var user = req.body.user;
+  var permissions = req.body.permissions;
   db.get('SELECT user FROM users WHERE user = ?', user, function(err, row) {
     // if(err)
     if(row) {
-      req.flash('errorMessage', 'There is already a user with that name.');
+      req.flash('errorMessage', " there is already a user with that name");
       res.redirect('/admin/users');
     } else {
       bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
-        db.run('INSERT INTO users ( user, password ) VALUES( ?, ? )', user, hash, function(err) {
+        db.run('INSERT INTO users ( user, password, permissions ) VALUES( ?, ?, ? )', user, hash, permissions, function(err) {
           // if(err)
           if(this.lastID) {
-            req.flash('successMessage', 'User created!');
+            req.flash('successMessage', " user created");
             res.redirect('/admin/users');
           } else {
-            req.flash('errorMessage', 'Apologies, it seems something went wrong.');
+            req.flash('errorMessage', " something went wrong");
             res.redirect('/admin/users');
           }
         });
@@ -143,21 +150,90 @@ var createUser = function(req, res) {
 }
 
 var deleteUser = function(req, res) {
-  if(req.user.user === req.body.user) {
-    req.flash('errorMessage', "You can't delete yourself.");
+  if(req.user.id == req.body.id) {
+    req.flash('errorMessage', " you can't delete yourself");
     res.redirect('/admin/users');
   } else {
-    db.run('DELETE FROM users WHERE user = ?', req.body.user, function(err) {
+    db.run('DELETE FROM users WHERE id = ?', req.body.id, function(err) {
       if(err) {
         //...
       } else {
-        req.flash('successMessage', 'User deleted!');
+        req.flash('successMessage', " user deleted");
         res.redirect('/admin/users');
       }
     });
   }
 }
 
+// # hashing the password takes a second
+// # need to let it complete before moving on
+// # really need a more elegant way to do this...
+var updatePassword = function(req, res, cb) {
+  if(req.body.password.length == 0) {
+    req.flash('successMessage', " password not changed");
+    cb(req, res);
+  } else {
+    bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
+      if(err) console.log(err)
+      req.flash('successMessage', " password updated");
+      req.query += "password = '" + hash + "', " ;
+      req.runquery = true;
+      cb(req, res);
+    });
+  }
+}
+
+var updatePermissions = function(req, res, cb) {
+  if(req.user.id == req.body.id && req.body.permissions != "admin") {
+    req.flash('errorMessage', " you can't remove your own admin status");
+    cb(req, res);
+  } else {
+    req.query += "permissions = '" + req.body.permissions + "'";
+    req.runquery = true;
+    cb(req, res);
+  }
+}
+
+var editUser = flow.define(
+  function(req, res) {
+    req.runquery = false;
+    req.query = "UPDATE users SET ";
+    updatePassword(req, res, this);
+  }
+  ,function(req, res) {
+    updatePermissions(req, res, this);
+  }
+  ,function(req, res) {
+    if(req.runquery == true) {
+      req.query += " WHERE id = " + req.body.id;
+      db.run(req.query, function(err) {
+        console.log(req.query)
+        if(err) {
+          //...
+          console.log(err);
+          req.flash('errorMessage', " something went wrong");
+          res.redirect('/admin/users');
+        } else {
+          req.flash('successMessage', " user updated");
+          res.redirect('/admin/users');
+        }
+      });
+    } else {
+      req.flash('errorMessage', " something went wrong");
+      res.redirect('/admin/users');
+    }
+  }
+);
+
+var listUsers = function(cb) {
+  db.all('SELECT id, user, permissions FROM users', function(err, rows) {
+    // if(err)
+    cb(rows);
+  });
+}
+
+
+// # DB FUNCTIONS FOR MAIN WEBSITE VIZ AND FIND
 var getCountries = function(req, cb) {
   var query = "SELECT * FROM countries";
   db.all(query, function(err, rows) {
@@ -179,6 +255,8 @@ var getCommunities = function(req, cb) {
   });
 }
 
+
+
 // setting up user authentication
 passport.use(new LocalStrategy({ usernameField: 'user' }, function(user, password, done) {
   db.get('SELECT password FROM users WHERE user = ?', user, function(err, row) {
@@ -197,11 +275,13 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(id, done) {
-  db.get('SELECT id, user FROM users WHERE id = ?', id, function(err, row) {
+  db.get('SELECT id, user, permissions FROM users WHERE id = ?', id, function(err, row) {
     if (!row) { return done(null, false); }
     return done(null, row);
   });
 });
+
+
 
 // setting up the app
 var express = require('express');
@@ -230,62 +310,107 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.engine('handlebars', exphbs({defaultLayout: 'admin'}));
+
+app.engine('handlebars', exphbs({
+  defaultLayout: 'main',
+  helpers: {
+    eq: function(v1,v2,options) {
+			if (v1 && v2 && v1.toString() === v2.toString()) {
+				return options.fn(this);
+			}
+			return options.inverse(this);
+		}
+    ,log: function(context,options) {
+			console.log(context);
+			return true;
+		}
+    ,viewname: function(filepath) {
+      // assumes extension is `.handlebars`
+      return filepath.slice(filepath.lastIndexOf('/') + 1, -11);
+    }
+  }
+}));
 app.set('view engine', 'handlebars');
 
-app.use(express.static('_site'));
+app.use(express.static('public'));
 
-app.post('/login', passport.authenticate('local', {
-    failureRedirect: '/admin'
-  }), function(req, res) {
-    res.redirect('/admin');
-  }
-);
+// WEBSITE TRANSLATIONS
+// ####################
+var english = express.Router();
+var spanish = express.Router();
 
-app.post('/logout', function(req, res) {
-	req.session.destroy(function(err) {
-		res.redirect('/admin');
-	})
+// route middleware that will happen on every request
+english.use(function(req, res, next) {
+    // Get language strings, or throw exception on error
+    try {
+      var translation = yaml.safeLoad(fs.readFileSync('./_data/en.yml', 'utf8'));
+      req.language = translation;
+    } catch (e) { console.log(e); }
+    // continue to the route
+    next();
+});
+spanish.use(function(req, res, next) {
+    // Get language strings, or throw exception on error
+    try {
+      var translation = yaml.safeLoad(fs.readFileSync('./_data/es.yml', 'utf8'));
+      req.language = translation;
+    } catch (e) { console.log(e); }
+    // continue to the route
+    next();
 });
 
-app.get('/admin', function(req, res) {
-		res.render('adminHome',{
-			user:req.user,
-			opts:settings.website
-		});
+// # HOME
+english.get('/', function(req, res) {
+	res.render('home',{
+    settings: settings.page,
+    text: req.language
+	});
+});
+spanish.get('/', function(req, res) {
+	res.render('home',{
+    settings: settings.page,
+    text: req.language
+	});
 });
 
-app.get('/admin/users', function(req, res) {
-  if(req.user) {
-    db.all('SELECT user FROM users', function(err, rows) {
-      res.render('adminUsers',{
-        user:req.user,
-        opts:settings.website,
-        users:rows,
-        error:req.flash("errorMessage"),
-				success:req.flash("successMessage")
-      });
-    });
-  } else {
-    res.redirect('/admin');
-  }
+// # FIND
+english.get('/find', function(req, res) {
+	res.render('find',{
+    settings: settings.page,
+    text: req.language
+	});
+});
+spanish.get('/encontrar', function(req, res) {
+	res.render('find',{
+    settings: settings.page,
+    text: req.language
+	});
 });
 
-app.get('/admin/documents', function(req, res) {
-  if(req.user) {
-    res.render('adminDocs',{
-      user:req.user,
-      opts:settings.website,
-      countries: settings.countries,
-      error:req.flash("errorMessage"),
-      success:req.flash("successMessage")
-    });
-  } else {
-    res.redirect('/admin');
-  }
+// # SHARE
+english.get('/share', function(req, res) {
+	res.render('share',{
+    settings: settings.page,
+    text: req.language
+	});
+});
+spanish.get('/compartir', function(req, res) {
+	res.render('share',{
+    settings: settings.page,
+    text: req.language
+	});
 });
 
-app.get('/api/documents', function(req, res) {
+app.use('/', english);
+app.use('/en', english);
+app.use('/es', spanish);
+
+
+// API
+// ###
+var api = express.Router();
+
+api.get('/documents', function(req, res) {
   // if(req.user) {
     getDocs(req, function(err, data) {
       if(err) { console.log(err); }
@@ -294,7 +419,7 @@ app.get('/api/documents', function(req, res) {
   // }
 });
 
-app.get('/api/documents/:rowid', function(req, res) {
+api.get('/documents/:rowid', function(req, res) {
   if(req.user) {
     getDocsRow(req, function(err, data) {
       if(err) { console.log(err); }
@@ -303,7 +428,7 @@ app.get('/api/documents/:rowid', function(req, res) {
   }
 });
 
-app.get('/api/file/:rowid', function(req, res) {
+api.get('/file/:rowid', function(req, res) {
   var query = "SELECT * FROM documents WHERE rowid = " + req.params.rowid;
   db.get(query, function(err, row) {
     if(row.published === 1) {
@@ -333,7 +458,7 @@ app.get('/api/file/:rowid', function(req, res) {
   });
 });
 
-app.post('/api/documents/:rowid', function(req, res) {
+api.post('/documents/:rowid', function(req, res) {
   if(req.user) {
     var method = req.body["_method"].toUpperCase();
     switch(method) {
@@ -350,26 +475,100 @@ app.post('/api/documents/:rowid', function(req, res) {
   }
 });
 
-app.get('/api/countries', function(req, res) {
+api.get('/countries', function(req, res) {
   getCountries(req, function(err, data) {
     if(err) { console.log(err); }
     res.json(data);
   });
 });
 
-app.get('/api/activecountries', function(req, res) {
+api.get('/activecountries', function(req, res) {
   getActiveCountries(req, function(err, data) {
     if(err) { console.log(err); }
     res.json(data);
   });
 });
 
-app.get('/api/communities/:iso3', function(req, res) {
+api.get('/communities/:iso3', function(req, res) {
   getCommunities(req, function(err, data) {
     if(err) { console.log(err); }
     res.json(data);
   });
 });
+
+app.use('/api', api);
+
+// ADMIN INTERFACE
+// ###############
+app.post('/login', passport.authenticate('local', {
+    failureRedirect: '/admin'
+  }), function(req, res) {
+    res.redirect('/admin');
+  }
+);
+
+app.post('/logout', function(req, res) {
+	req.session.destroy(function(err) {
+		res.redirect('/admin');
+	})
+});
+
+app.post('/admin/user', function(req, res) {
+  if (req.user && req.user.permissions == "admin") {
+    switch(req.body["_method"]) {
+      case "DELETE":
+        deleteUser(req, res);
+      break;
+      case "PUT":
+        editUser(req, res);
+      break;
+      default:
+        createUser(req, res);
+      break;
+    }
+  } else { res.redirect('/admin/users'); }
+});
+
+app.get('/admin', function(req, res) {
+		res.render('adminHome',{
+      layout: 'admin',
+			user:req.user,
+			settings: settings.page
+		});
+});
+
+app.get('/admin/users', function(req, res) {
+  if(req.user && req.user.permissions == "admin") {
+    listUsers(function(result) {
+      res.render('adminUsers',{
+        layout: 'admin',
+        user:req.user,
+        users: result,
+        settings: settings.page,
+        error:req.flash("errorMessage"),
+        success:req.flash("successMessage")
+      });
+    });
+  } else {
+    res.redirect('/admin');
+  }
+});
+
+app.get('/admin/documents', function(req, res) {
+  if((req.user && req.user.permissions == "admin") || (req.user && req.user.permissions == "editor")) {
+    res.render('adminDocs',{
+      layout: 'admin',
+      user:req.user,
+      settings: settings.page,
+      countries: settings.countries,
+      error:req.flash("errorMessage"),
+      success:req.flash("successMessage")
+    });
+  } else {
+    res.redirect('/admin');
+  }
+});
+
 
 var multer  = require('multer');
 var multerS3 = require('multer-s3');
@@ -455,21 +654,7 @@ app.post('/upload', upload.single('vcaFile'), function(req, res) {
   });
 });
 
-app.post('/user', function(req, res) {
-  if (req.user) {
-    switch(req.body["_method"]) {
-      case "DELETE":
-        deleteUser(req, res);
-      break;
-      case "PUT":
-        // ...
-      break;
-      default:
-        createUser(req, res);
-      break;
-    }
-  } else { res.redirect('/admin'); }
-});
+
 
 app.listen(settings.app.port, function() {
   console.log('app listening on port ' + settings.app.port);

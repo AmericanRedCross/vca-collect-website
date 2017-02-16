@@ -1,3 +1,5 @@
+@import 'util/util';
+
 // Preventing FOUC
 // ###############
 // http://foundation.zurb.com/sites/docs/responsive-navigation.html#preventing-fouc
@@ -15,7 +17,9 @@
 }
 
 
-
+.nav-text:hover {
+  color: $secondary-color !important;
+}
 .custom-navigation__top-bar {
   padding: 0;
   text-transform: uppercase;
@@ -25,7 +29,7 @@
   border-bottom: 4px solid transparent;
 }
 .custom-navigation__link:hover {
-  border-bottom: 4px solid #ed1b2e;
+  border-bottom: 4px solid $secondary-color;
 }
 .custom-navigation__top-bar a {
   text-decoration: none;
@@ -36,6 +40,9 @@
 }
 .hidden {
   display: none;
+}
+.language-nav {
+  min-width: 0;
 }
 
 

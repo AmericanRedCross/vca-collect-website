@@ -1,0 +1,29 @@
+{{> nav}}
+
+
+<script>
+
+window.onload = function() {
+  $.get("/api/documents", function(data) {
+    console.log(data)
+    for(var i=0, len=data.length; i<len; i++) {
+      var row = "<tr>" +
+        "<td>" + data[i].title + "</td>" +
+        "<td>" + data[i].iso3 + "</td>" +
+        "<td>" + data[i].description + "</td>" +
+        "<td>" + data[i].year + "</td>" +
+        "<td>" + data[i].size + "</td>";
+        if(data[i].published === 1) {
+          row += '<td><a href="/api/file/' + data[i].rowid + '" download><i class="fa fa-download" aria-hidden="true"></i></a></td>';
+        } else {
+          row += "<td>no</td>";
+        }
+        row += "</tr>";
+      $("#documents tbody").append(row);
+    }
+
+  });
+}
+
+
+</script>

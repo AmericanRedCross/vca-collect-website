@@ -1,0 +1,37 @@
+<div data-sticky-container>
+  <div class="title-bar" data-responsive-toggle="navigation-menu" data-hide-for="medium">
+    <button class="menu-icon" type="button" data-toggle></button>
+    <div class="title-bar-title">Menu</div>
+  </div>
+  <div class="top-bar custom-navigation__top-bar" id="navigation-menu" data-sticky data-options="marginTop:0;" style="width:100%">
+    <div class="top-bar-right">
+      <ul class="dropdown menu" data-dropdown-menu>
+        {{#each settings.nav}}
+          {{#each this}}
+            {{#eq @key ../../text.meta.language}}
+              <li><a class="custom-navigation__link nav-text" href="{{url}}">{{text}}</a></li>
+            {{/eq}}
+          {{/each}}
+        {{/each}}
+        <li>
+          <a href="#" class="nav-text">{{text.meta.language}}</a>
+          <ul class="menu language-nav">
+            {{#each settings.nav}}
+
+              {{#eq @key (viewname @exphbs.filePath)}}
+                {{#each this}}
+                  <li class="nav-text">
+                    <a href="{{this.url}}">{{@key}}</a>
+                  </li>
+                {{/each}}
+              {{/eq}}
+            {{/each}}
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="hide-for-medium custom-navigation_spacer"></div>
