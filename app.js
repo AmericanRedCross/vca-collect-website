@@ -2,6 +2,7 @@ var settings = require('./settings.js');
 var fs = require('fs');
 var path = require('path');
 var flow = require('flow');
+// var queue = require('d3-queue')
 var yaml = require('js-yaml');
 var crypto = require('crypto');
 var sqlite3 = require('sqlite3');
@@ -234,6 +235,14 @@ var listUsers = function(cb) {
 
 
 // # DB FUNCTIONS FOR MAIN WEBSITE VIZ AND FIND
+
+var queryDb = function(query, cb) {
+  db.all(query, function(err, rows) {
+    // if err...
+    cb(err, rows);
+  })
+}
+
 var getCountries = function(req, cb) {
   var query = "SELECT * FROM countries";
   db.all(query, function(err, rows) {
@@ -242,7 +251,7 @@ var getCountries = function(req, cb) {
 }
 
 var getActiveCountries = function(req, cb ) {
-  var query  = "SELECT *, COUNT(*) FROM documents GROUP BY iso3 INNER JOIN countries ON documents.iso3 = countries.iso3"
+  var query  = "SELECT documents.iso3, countries.iso2, countries.en, COUNT() AS count FROM documents LEFT OUTER JOIN countries ON ( documents.iso3 = countries.iso3 ) GROUP BY documents.iso3";
   db.all(query, function(err, rows) {
     cb(err, rows);
   });
@@ -426,6 +435,28 @@ api.get('/documents/:rowid', function(req, res) {
       res.json(data);
     });
   }
+});
+
+api.get('/find', function(req, res) {
+  var countryQuery = "SELECT DISTINCT(documents.iso3), countries.* from documents INNER JOIN countries ON countries.iso3 = documents.iso3";
+  var docsQuery = "SELECT * FROM documents";
+  // var q = queue.queue();
+  // q.defer(queryDb, countryQuery);
+  // q.defer(queryDb, docsQuery);
+  // q.await(function(error, countries, docs) {
+  //   if (error) console.log(error);
+  //   res.json( { docs: docs, countries: countries })
+  // });
+  flow.exec(
+    function() {
+      queryDb(countryQuery, this.MULTI('countries'))
+      queryDb(docsQuery, this.MULTI('docs'))
+    }
+    ,function(data) {
+      res.json( { docs: data.docs["1"], countries: data.countries["1"] })
+    }
+  )
+
 });
 
 api.get('/file/:rowid', function(req, res) {
@@ -645,6 +676,7 @@ app.post('/upload', upload.single('vcaFile'), function(req, res) {
     "'" + req.file.key.replace("'","''") + "', " +
     "'" + req.body.description.replace("'","''") + "') ";
     // TODO: make a function to getting string values ready for inclusion in sql queries and figure that out
+    console.log(query)
   db.run(query, function(err) {
     if(err) {
       res.json({ type: "error", message: err })

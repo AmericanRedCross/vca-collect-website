@@ -12,7 +12,13 @@
       <label>Title:
         <input id="title" type="text" name="title" placeholder="..." value="null" required>
       </label>
-      <label>Descrition:
+      <label>Type:
+        <fieldset>
+          <input type="radio" name="type" value="VCA" id="VCA" required><label for="VCA">VCA</label>
+          <input type="radio" name="type" value="POA" id="POA"><label for="POA">POA</label>
+        </fieldset>
+      </label>
+      <label>Description:
         <textarea id="description" type="text" name="description" placeholder="..." rows= "3" required>null</textarea>
       </label>
       <label>Country:
@@ -80,6 +86,9 @@ function editRow(rowid) {
       $("#published-false").click();
     }
     $("#title").val(response.title);
+    $("input[name='type']").prop('checked', false);
+    var typeStr = "input[name='type'][value='" + response.type + "']";
+    $(typeStr).prop('checked', true);
     $("#description").text(response.description);
     $("#country").find('option').attr('selected',null);
     $("#country").find('option[value=' + response.iso3 + ']').attr('selected','selected');
@@ -147,9 +156,9 @@ window.onload = function() {
     var header = response[0];
     $("#dataTable thead tr").append("<th></th>")
     for (field in header) {
-      if(field !== "rowid"){
+      // if(field !== "rowid"){
         $("#dataTable thead tr").append('<th>' + field + ' <br><input class="column-search" type="search" placeholder="search..." /></th>');
-      }
+      // }
     }
     // render body of table
     var tbody = $("#dataTable tbody")[0];
@@ -160,7 +169,7 @@ window.onload = function() {
         $(editRow).html(editBtnHtml);
         tr.appendChild(editRow);
         for (field in response[i]) {
-          if(field !== "rowid"){
+          // if(field !== "rowid"){
             var td = document.createElement("td");
             var cell = response[i][field];
             if(field === "published" && cell === 0) { cell = "no"; }
@@ -169,7 +178,7 @@ window.onload = function() {
                 .html(cell)
                 .attr("title", response[i][field]);
             tr.appendChild(td);
-          }
+          // }
         }
         tbody.appendChild(tr);
     }

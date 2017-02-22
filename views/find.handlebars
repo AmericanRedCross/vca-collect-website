@@ -1,29 +1,170 @@
 {{> nav}}
 
+<br>
 
+<div id="country-cards" class="row small-up-2 medium-up-3 large-up-4" data-equalizer>
+</div>
+
+
+<div id="documents-header" class="row" style="display:none;">
+  <div class="small-12 columns">
+    <h4><span id="selected-country">Country Name</span> &nbsp; <small onClick="countryChoice(null);" class="subheader action-text"> <i class="fa fa-undo" aria-hidden="true"></i>  {{text.common.back}} </small></h4>
+  </div>
+</div>
+
+<div id="documents-cards" class="row small-up-2 medium-up-3 large-up-4" data-equalizer>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.6.0/d3.min.js"></script>
 <script>
+var pageLanguage = "{{text.meta.language}}";
+
+var typeIcon = function(extension){
+  switch(extension) {
+    case ".doc":
+    case ".docx":
+      return '<i class="fa fa-fw fa-file-word-o"></i> '
+      break;
+    case ".jpeg":
+    case ".jpg":
+    case ".png":
+      return '<i class="fa fa-fw fa-file-image-o"></i> '
+      break;
+    case ".pdf":
+      return '<i class="fa fa-fw fa-file-pdf-o"></i> '
+      break;
+    case ".ppt":
+    case ".pptx":
+      return '<i class="fa fa-fw fa-file-powerpoint-o"></i> '
+      break;
+    case ".xls":
+    case ".xlsm":
+    case ".xlsx":
+      return '<i class="fa fa-fw fa-file-excel-o"></i> '
+      break;
+    case ".zip":
+      return '<i class="fa fa-fw fa-file-archive-o"></i> '
+      break;
+    default:
+      return '<i class="fa fa-fw fa-file-o"></i> '
+  }
+};
 
 window.onload = function() {
-  $.get("/api/documents", function(data) {
-    console.log(data)
-    for(var i=0, len=data.length; i<len; i++) {
-      var row = "<tr>" +
-        "<td>" + data[i].title + "</td>" +
-        "<td>" + data[i].iso3 + "</td>" +
-        "<td>" + data[i].description + "</td>" +
-        "<td>" + data[i].year + "</td>" +
-        "<td>" + data[i].size + "</td>";
-        if(data[i].published === 1) {
-          row += '<td><a href="/api/file/' + data[i].rowid + '" download><i class="fa fa-download" aria-hidden="true"></i></a></td>';
-        } else {
-          row += "<td>no</td>";
-        }
-        row += "</tr>";
-      $("#documents tbody").append(row);
+  $.get("/api/find", function(response) {
+
+    var data = response;
+    // data.docs
+    //   {"rowid":1,"published":0,"type":"VCA","iso3":"BRA","community":"sunrise","org":null,"title":"bob","year":2017,"size":"425.53 KB","filename":"Activation_Flow_2016_March_v2_2017-02-17_14-36-57.pdf","description":"this is about bob. with support from Finnish RC."}
+    // & data.countries
+    //   {"iso3":"MEX","id":88,"iso2":"MX","en":"Mexico","fr":"Mexique","es":"Estados Unidos Mexicanos","ns":"Mexican Red Cross","zone":"Americas"}
+    docs = d3.nest()
+      .key(function(d) { return d.iso3; })
+      .key(function(d) { return d.type; })
+      .map(data.docs)
+    countries = d3.nest()
+      .key(function(d) { return d.iso3; })
+      .map(data.countries)
+
+    countryChoice = function(iso3) {
+      if(iso3 == null) {
+        $('#documents-header').hide();
+        $('#documents-cards').hide();
+        $('#country-cards').fadeIn();
+
+      } else {
+
+        $('#documents-header').fadeIn();
+        $('#documents-cards').fadeIn();
+        $('#country-cards').hide();
+
+        var name = '<img class="country-flag" src="/images/flags/4x3/' + countries.get(iso3)[0].iso2 + '.svg" >';
+        name += (countries.get(iso3)[0][pageLanguage] !== undefined) ? countries.get(iso3)[0][pageLanguage] : countries.get(iso3)[0]["en"];
+
+        // setTimeout(function(){ alert("Hello"); }, 3000);
+
+        // d3.select('#country-cards').transition().duration(250)
+        //   .style('opacity', 1e-6);
+        $('#selected-country').html(name);
+        // // $('#documents-header').fadeIn();
+        // d3.select('#documents-header').transition().delay(250).duration(250)
+        //   .style('opacity', 1);
+
+
+        var filteredDocs = data.docs.filter(function(d) { return d.iso3 == iso3 });
+        var documentCards = d3.select('#documents-cards').selectAll('div.column').data(filteredDocs, function(d) { return d.rowid; });
+
+        // EXIT
+        documentCards.exit().remove();
+        // no UPDATE
+        // ENTER
+        documentCards.enter().append('div')
+          .attr('class', 'column')
+          .style('opacity', 1e-6)
+          .html(function(d) {
+              var download = "";
+              if(d.published == 1) {
+                var extension = d.filename.substr(d.filename.lastIndexOf('.'));
+                download = '<a href="/api/file/' + d.id + '" download>' + typeIcon(extension) + ' ' + d.size + '</a><br>';
+              }
+              var html = '<div class="card" data-equalizer-watch>' +
+              '<div class="card-section">' +
+              '<h5><i class="fa fa-fw fa-map-marker subheader" aria-hidden="true"></i> ' + d.community + '<br><span class=""><i class="fa fa-fw fa-file-text-o subheader" aria-hidden="true"></i> ' + d.title + '</span></h5>' +
+              '<p><small>' + d.type + ', ' + d.year + '<br>' +
+              d.description + '</br>' +
+              '</small>' + download + '</p>' +
+              '</div>' +
+              '</div>';
+              return html;
+            })
+          .transition().duration(250)
+            .style('opacity', 1);
+
+        d3.select('#documents-cards').selectAll('div.column').sort(function(a, b) {
+          return d3.ascending(a.community, b.community);
+        })
+      }
+
     }
+
+    countryCards = d3.select('#country-cards').selectAll('#country-cards div.column').data(data.countries);
+    countryCards.enter().append('div')
+      .attr('class', 'column')
+      .style('opacity', 1e-6)
+      .html(function(d) {
+          var counts = [];
+          docs.get(d.iso3).each(function(value, key) {
+            counts.push('<small>' + value.length  + ' ' + key + '</small>');
+          });
+          var html = '<div class="card country-card" onClick="countryChoice(' + "'" + d.iso3 + "'" + ');" data-equalizer-watch>' +
+            '<div class="card-section" style="padding-bottom:0;">' +
+            '<img class="country-flag" src="/images/flags/4x3/' + d.iso2 + '.svg" >' +
+            '<h5>';
+          html += (d[pageLanguage] !== undefined) ? d[pageLanguage] : d["en"];
+          html += '</h5>' + counts.join(', ');
+          html += '</div></div>';
+          return html;
+        })
+      .transition().duration(250)
+        .style('opacity', 1);
+
+    d3.select('#country-cards').selectAll('div.column').sort(function(a, b) {
+      var alpha = (a[pageLanguage] !== undefined) ? a[pageLanguage] : a["en"];
+      var beta = (b[pageLanguage] !== undefined) ? b[pageLanguage] : b["en"];
+      return d3.ascending(alpha, beta);
+    })
+
+
+
+
 
   });
 }
+
+// $('#country-cards').foundation('destroy')
+// d3.select('#country-cards').property('data-equalizer', true).attr('data-equalize-by-row','true')
+// new Foundation.Equalizer($('#country-cards'));
 
 
 </script>

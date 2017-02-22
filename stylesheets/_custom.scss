@@ -1,5 +1,3 @@
-@import 'util/util';
-
 // Preventing FOUC
 // ###############
 // http://foundation.zurb.com/sites/docs/responsive-navigation.html#preventing-fouc
@@ -45,6 +43,30 @@
   min-width: 0;
 }
 
+.action-text {
+    cursor: pointer;
+    color: $secondary-color;
+}
+.action-text:hover {
+    color: darken($secondary-color, 25%);
+}
+
+#documents-header .country-flag {
+  width: 34px;
+  float: left;
+  margin-right: 15px;
+  padding-top: 4px;
+}
+
+.country-card {
+  cursor: pointer;
+}
+.country-card .country-flag {
+  width: 24px;
+  float: left;
+  margin-right: 15px;
+  padding-top: 4px;
+}
 
 // css for _includes/overview.html
 // ###############################

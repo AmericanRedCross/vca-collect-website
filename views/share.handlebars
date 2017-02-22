@@ -70,7 +70,7 @@
 
 <script>
 
-var locale = "{{locale}}";
+var pageLanguage = "{{text.meta.language}}";
 window.onload = function() {
 
   // if the page loads with it hidden it won't spin when shown
@@ -106,8 +106,9 @@ window.onload = function() {
 
   $.get("/api/countries", function(data) {
     for(var i=0, len=data.length; i<len; i++) {
-      // var country = (data[i][locale] !== null) ? data[i][locale] : data[i]["en"];
-      var html = '<option value="' + data[i].iso3 + '">' + data[i].en + '</option>';
+      var html = '<option value="' + data[i].iso3 + '">'
+      html += (data[i][pageLanguage] !== undefined) ? data[i][pageLanguage] : data[i]["en"];
+      html += '</option>';
       $("#iso3").append(html);
     }
   });

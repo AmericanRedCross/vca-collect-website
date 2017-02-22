@@ -7,4 +7,47 @@ meta:
   language:      "es"
 
 about:
-  movement:       "Movimiento Internacional de la Cruz Roja y de la Media Luna Roja"
+  movement:   "Movimiento Internacional de la Cruz Roja y de la Media Luna Roja"
+  header1:    "About this Website"
+  text1a:     "This repository has been developed by the IFRC together with the Global Disaster Preparedness Center to facilitate the collection of VCA reports and Plans of Action from the Red Cross / Red Crescent Movement. The site allows users to upload, search for and access VCA reports and Plans of Action from VCAs that were conducted by the communities with the National Societies and other partners worldwide."
+  text1b:     "The repository serves National Societies and their communities as an archive of VCA reports, highlighting the collective use and impact of the methodology and indicating gap areas in the use of the methodology across different communities. National Societies can use this site to collect and consolidate their VCA reports and Plans of Action to have a historic repository of their work and be able to access relevant information for longer-term monitoring of risks and vulnerabilities or to feed into the situational awareness in case of an emergency."
+  header2:    "About the Vulnerability Capacity Assessment (VCA)"
+  text2a:     "The Vulnerable Capacity Assessment (VCA) is a process designed to accompany communities to be more resilient through the identification and assessment of their priority needs. The VCA provides a toolkit for community-lead assessments and solution finding processes that integrate information on existing risks, vulnerabilities and capacities and form the basis for successful community-based programming."
+  text2b:     "The VCA allows the Red Cross Red Crescent National Societies to contextualize each step of the programming cycle to ensure it is focused on communities. Through this process, VCAs help to empower communities by making them risk-informed and building ownership in the identification and development of solutions to increase resilience."
+  text2c:     "The first VCA guide was created in 1999 at the request of National Societies, and it supports the IFRC’s core mandate to serve the most vulnerable. It was endorsed in 1999 by the General Assembly. Since its inception, the VCA has been successfully used around the globe by the IFRC and numerous external partners."
+  text2d:     "It is a vital, participatory, community-driven process that contributes to the ongoing efforts of the IFRC and member National Societies, as they the work with local communities to define needs and develop solutions to reduce vulnerabilities and strengthen community resilience."
+
+find:
+  header:     "Find page (EN)"
+  about:      "The user will be able to filter and search the uploaded VCAs on this page."
+
+share:
+  sharePrompt: "Upload (EN)"
+  fileBtn:    "Select file"
+  fileHelp:   "(accepted file types are .doc, .docx, and .pdf)"
+  titlePrompt: "Title of document"
+  countryLabel: "Country where activities occurred"
+  countryPrompt: "Select a country..."
+  commPrompt: "Select a community..."
+  commAdd:    "Add a new community"
+  yearPrompt: "Select year VCA was completed..."
+
+common:
+  allFieldsErr: "Please complete all form fields."
+  back:       "Back"
+  cancel:     "Cancel"
+  clearForm:  "Clear form"
+  community:  "Community"
+  country:    "Country"
+  description: "Description"
+  download:   "Download"
+  error:      "Error"
+  false:      "False"
+  filename:   "File name"
+  fileSize:   "File size"
+  submit:     "Submit"
+  success:    "Success"
+  title:      "Title"
+  type:       "Type"
+  true:       "True"
+  year:       "Year"

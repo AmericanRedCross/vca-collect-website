@@ -17,6 +17,7 @@
 ### TODO
 - https://github.com/AmericanRedCross/vca-collect-website/issues/1
 - maybe use helpers to internationalize your Handlebars templates: https://formatjs.io/handlebars/
+- sometimes the 'type' value doesn't go through on the share form?
 
 ## Because nothing works and everything is terrible
 1. Why is the nav bar partial embedded in every page view file instead of in the main layout file?
