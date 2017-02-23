@@ -79,7 +79,7 @@ window.onload = function() {
         $('#documents-cards').fadeIn();
         $('#country-cards').hide();
 
-        var name = '<img class="country-flag" src="/images/flags/4x3/' + countries.get(iso3)[0].iso2 + '.svg" >';
+        var name = '<img class="country-flag" src="/images/flags/4x3/' + countries.get(iso3)[0].iso2.toLowerCase() + '.svg" >';
         name += (countries.get(iso3)[0][pageLanguage] !== undefined) ? countries.get(iso3)[0][pageLanguage] : countries.get(iso3)[0]["en"];
 
         // setTimeout(function(){ alert("Hello"); }, 3000);
@@ -139,7 +139,7 @@ window.onload = function() {
           });
           var html = '<div class="card country-card" onClick="countryChoice(' + "'" + d.iso3 + "'" + ');" data-equalizer-watch>' +
             '<div class="card-section" style="padding-bottom:0;">' +
-            '<img class="country-flag" src="/images/flags/4x3/' + d.iso2 + '.svg" >' +
+            '<img class="country-flag" src="/images/flags/4x3/' + d.iso2.toLowerCase() + '.svg" >' +
             '<h5>';
           html += (d[pageLanguage] !== undefined) ? d[pageLanguage] : d["en"];
           html += '</h5>' + counts.join(', ');
