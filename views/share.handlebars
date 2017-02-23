@@ -114,7 +114,7 @@ window.onload = function() {
   });
 
   clearForm = function(){
-    $("#upload").find("input").val('');
+    $("#upload").find("input[type=text]").val('');
     $('input[type=radio]').attr('checked',false);
     $("#description").val('');
     $("#year").val('');
