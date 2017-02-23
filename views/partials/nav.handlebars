@@ -1,37 +1,78 @@
-<div data-sticky-container>
-  <div class="title-bar" data-responsive-toggle="navigation-menu" data-hide-for="medium">
-    <button class="menu-icon" type="button" data-toggle></button>
-    <div class="title-bar-title">Menu</div>
-  </div>
-  <div class="top-bar custom-navigation__top-bar" id="navigation-menu" data-sticky data-options="marginTop:0;" style="width:100%">
-    <div class="top-bar-right">
-      <ul class="dropdown menu" data-dropdown-menu>
-        {{#each settings.nav}}
-          {{#each this}}
-            {{#eq @key ../../text.meta.language}}
-              <li><a class="custom-navigation__link nav-text" href="{{url}}">{{text}}</a></li>
-            {{/eq}}
-          {{/each}}
-        {{/each}}
-        <li>
-          <a href="#" class="nav-text">{{text.meta.language}}</a>
-          <ul class="menu language-nav">
-            {{#each settings.nav}}
-
-              {{#eq @key (viewname @exphbs.filePath)}}
-                {{#each this}}
-                  <li class="nav-text">
-                    <a href="{{this.url}}">{{@key}}</a>
-                  </li>
-                {{/each}}
+<div class="row hide-for-medium">
+  <div class="columns box">
+    <ul class="dropdown menu float-left" data-dropdown-menu>
+      <li>
+        <a href="#" class="no-arrow custom-nav__link action-text"><small><i class="fa fa-bars" aria-hidden="true"></i> {{text.common.menu}}</small></a>
+        <ul class="menu custom-nav-small-dropdown">
+          {{#each settings.nav}}
+            {{#each this}}
+              {{#eq @key ../../text.meta.language}}
+                <li><a class="custom-nav__link action-text" href="{{url}}"><small>{{text}}</small></a></li>
               {{/eq}}
             {{/each}}
-          </ul>
-        </li>
-      </ul>
-    </div>
+          {{/each}}
+        </ul>
+      </li>
+    </ul>
+    <ul class="language-picker-small language-picker dropdown menu hide-for-medium float-right" data-dropdown-menu>
+      <li>
+        <a href="#" class="action-text"><small>{{text.meta.language}}</small></a>
+        <ul class="menu language-nav-dropdown">
+          {{#each settings.nav}}
+
+            {{#eq @key (viewname @exphbs.filePath)}}
+              {{#each this}}
+                <li>
+                  <a class="action-text" href="{{this.url}}"><small>{{@key}}</small></a>
+                </li>
+              {{/each}}
+            {{/eq}}
+          {{/each}}
+        </ul>
+      </li>
+    </ul>
   </div>
 </div>
 
 
-<div class="hide-for-medium custom-navigation_spacer"></div>
+<ul class="language-picker-large language-picker dropdown menu show-for-medium" data-dropdown-menu>
+  <li>
+    <a href="#" class="">{{text.meta.language}}</a>
+    <ul class="menu language-nav-dropdown">
+      {{#each settings.nav}}
+
+        {{#eq @key (viewname @exphbs.filePath)}}
+          {{#each this}}
+            <li class="">
+              <a href="{{this.url}}">{{@key}}</a>
+            </li>
+          {{/each}}
+        {{/eq}}
+      {{/each}}
+    </ul>
+  </li>
+</ul>
+
+<div class="row">
+  <div class="columns text-center">
+    <h4 class="brand">{{text.about.movement}}</h4>
+    <h3 class="main-header">{{text.about.mainheader}}</h3>
+  </div>
+</div>
+<br>
+
+<div class="expanded row box custom-nav show-for-medium">
+  <div class="columns text-center">
+    <div class="menu-centered">
+      <ul class="menu">
+        {{#each settings.nav}}
+          {{#each this}}
+            {{#eq @key ../../text.meta.language}}
+              <li><a class="custom-nav__link action-text" href="{{url}}">{{text}}</a></li>
+            {{/eq}}
+          {{/each}}
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+</div>

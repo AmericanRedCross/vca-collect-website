@@ -1,46 +1,77 @@
-// Preventing FOUC
-// ###############
-// http://foundation.zurb.com/sites/docs/responsive-navigation.html#preventing-fouc
-.no-js {
-  @include breakpoint(small only) {
-    .top-bar {
-      display: none;
-    }
-  }
-  @include breakpoint(medium) {
-    .title-bar {
-      display: none;
-    }
-  }
+$rc-red: #ed1b2e;
+$deep-red: #74181b;
+
+body {
+  background: url('/images/img/background.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
 }
 
-
-.nav-text:hover {
-  color: $secondary-color !important;
+.box {
+  background: #fff;
+  background: rgba(255,255,255,0.9);
 }
-.custom-navigation__top-bar {
-  padding: 0;
+
+.language-picker-large {
+  margin: rem-calc(6 12);
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: transparent !important;
+}
+.language-picker a {
+  text-decoration: none;
   text-transform: uppercase;
 }
-.custom-navigation__link  {
+.language-picker-large a {
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+  color: #fff;
+}
+.language-picker a:hover {
+  color: $deep-red;
+}
+.language-nav-dropdown {
+  min-width: 0;
+  border: none;
+}
+.language-picker-large .language-nav-dropdown {
   background-color: transparent !important;
-  border-bottom: 4px solid transparent;
 }
-.custom-navigation__link:hover {
-  border-bottom: 4px solid $secondary-color;
-}
-.custom-navigation__top-bar a {
-  text-decoration: none;
-  color: inherit;
-}
-.custom-navigation_spacer {
-  height: 60px;
-}
+
 .hidden {
   display: none;
 }
-.language-nav {
+
+.brand {
+  margin: 0;
+  padding: rem-calc(30 0 10);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+  color: #fff;
+}
+.main-header {
+  text-transform: uppercase;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+  color: #fff;
+}
+
+.custom-nav {
+  line-height: normal;
+}
+.custom-nav.show-for-medium {
+  margin-bottom: rem-calc(16);
+}
+.custom-nav-small-dropdown {
   min-width: 0;
+  border: none;
+}
+.no-arrow::after {
+  display: none !important;
+}
+.custom-nav li {
+  padding: rem-calc(10 20);
+  font-size: 1.3rem;
 }
 
 .action-text {
@@ -48,8 +79,11 @@
     color: $secondary-color;
 }
 .action-text:hover {
-    color: darken($secondary-color, 25%);
+    color: $deep-red;
 }
+
+// css for _includes/find.html
+// ###############################
 
 #documents-header .country-flag {
   width: 34px;
@@ -78,10 +112,23 @@
 .overview_fact {
   text-align: center;
 }
-.country__focus {
-  stroke: #000;
+.country__default {
+  fill: #101412;
+  fill: rgba(16,20,18,0.8);
   stroke-linecap: round;
 }
+.country__active {
+  fill: $rc-red;
+  stroke: $deep-red;
+}
+.country__focus {
+  stroke: $deep-red;
+  stroke-width: 2px;
+}
+.about-block {
+  padding: rem-calc(30);
+}
+
 #tooltip {
     position:absolute;
     z-index:999;

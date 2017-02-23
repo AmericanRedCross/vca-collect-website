@@ -1,16 +1,17 @@
 {{> nav}}
 
-<br>
-
 <div id="country-cards" class="row small-up-2 medium-up-3 large-up-4" data-equalizer>
 </div>
 
 
-<div id="documents-header" class="row" style="display:none;">
-  <div class="small-12 columns">
-    <h4><span id="selected-country">Country Name</span> &nbsp; <small onClick="countryChoice(null);" class="subheader action-text"> <i class="fa fa-undo" aria-hidden="true"></i>  {{text.common.back}} </small></h4>
+<div id="documents-header" class="row expanded" style="display:none;">
+  <div class="small-12 columns box" >
+    <div style="margin:10px;">
+      <h4><span id="selected-country">Country Name</span> &nbsp; <small onClick="countryChoice(null);" class="subheader action-text"> <i class="fa fa-undo" aria-hidden="true"></i>  {{text.common.back}} </small></h4>
+    </div>
   </div>
 </div>
+<br>
 
 <div id="documents-cards" class="row small-up-2 medium-up-3 large-up-4" data-equalizer>
 </div>

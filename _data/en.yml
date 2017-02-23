@@ -8,6 +8,7 @@ meta:
 
 about:
   movement:   "International Red Cross and Red Crescent Movement"
+  mainheader: "Vulnerability Capacity Assessment (VCA)"
   header1:    "About this Website"
   text1a:     "This repository has been developed by the IFRC together with the Global Disaster Preparedness Center to facilitate the collection of VCA reports and Plans of Action from the Red Cross / Red Crescent Movement. The site allows users to upload, search for and access VCA reports and Plans of Action from VCAs that were conducted by the communities with the National Societies and other partners worldwide."
   text1b:     "The repository serves National Societies and their communities as an archive of VCA reports, highlighting the collective use and impact of the methodology and indicating gap areas in the use of the methodology across different communities. National Societies can use this site to collect and consolidate their VCA reports and Plans of Action to have a historic repository of their work and be able to access relevant information for longer-term monitoring of risks and vulnerabilities or to feed into the situational awareness in case of an emergency."
@@ -45,6 +46,7 @@ common:
   false:      "False"
   filename:   "File name"
   fileSize:   "File size"
+  menu:       "Menu"
   submit:     "Submit"
   success:    "Success"
   title:      "Title"

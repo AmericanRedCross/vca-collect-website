@@ -1,7 +1,7 @@
 {{> nav}}
 
 <div class="row">
-  <div class="small-8 small-offset-2 medium-6 medium-offset-3 columns">
+  <div class="small-8 small-offset-2 medium-6 medium-offset-3 columns box">
       <div id="errorMessage" class="callout warning hidden" data-closable>
         <span><strong>{{text.common.error}}: </strong><span id="errorMessageText"></span></span>
         <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
@@ -18,7 +18,7 @@
 </div>
 
 <div class="row">
-  <div class="small-8 small-offset-2 medium-6 medium-offset-3 columns">
+  <div class="small-8 small-offset-2 medium-6 medium-offset-3 columns box">
     <h4>{{text.share.sharePrompt}}</h4>
     <form id="upload" action="/upload" enctype="multipart/form-data" method="POST">
       <label for="vcaFile" class="button">{{text.share.fileBtn}}</label> <span id="selectedFile"></span>
