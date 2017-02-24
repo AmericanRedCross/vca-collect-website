@@ -10,13 +10,28 @@ about:
   movement:   "Movimiento Internacional de la Cruz Roja y de la Media Luna Roja"
   mainheader: "Vulnerability Capacity Assessment (VCA)"
   header1:    "About this Website"
-  text1a:     "This repository has been developed by the IFRC together with the Global Disaster Preparedness Center to facilitate the collection of VCA reports and Plans of Action from the Red Cross / Red Crescent Movement. The site allows users to upload, search for and access VCA reports and Plans of Action from VCAs that were conducted by the communities with the National Societies and other partners worldwide."
-  text1b:     "The repository serves National Societies and their communities as an archive of VCA reports, highlighting the collective use and impact of the methodology and indicating gap areas in the use of the methodology across different communities. National Societies can use this site to collect and consolidate their VCA reports and Plans of Action to have a historic repository of their work and be able to access relevant information for longer-term monitoring of risks and vulnerabilities or to feed into the situational awareness in case of an emergency."
+  text1a:     "This platform has been developed by the IFRC together with the Global Disaster Preparedness Center to facilitate the collection and use of VCA reports and Plans of Action from the Red Cross / Red Crescent Movement. The site allows users to upload, search for and access VCA reports and Plans of Action from VCAs that were conducted by the communities with the National Societies and other partners worldwide. "
+  text1b:     "This site serves National Societies and their communities as platform to collect and consolidate VCA reports and Plans of Action for information and future reference, highlighting the collective use and impact of the methodology and indicating gap areas in its use across different communities. This allows National Societies to have a historic repository of their work and to access relevant information for longer-term monitoring of risks and vulnerabilities or for situational awareness in case of an emergency."
   header2:    "About the Vulnerability Capacity Assessment (VCA)"
-  text2a:     "The Vulnerable Capacity Assessment (VCA) is a process designed to accompany communities to be more resilient through the identification and assessment of their priority needs. The VCA provides a toolkit for community-lead assessments and solution finding processes that integrate information on existing risks, vulnerabilities and capacities and form the basis for successful community-based programming."
+  text2a:     "The Vulnerability and Capacity Assessment (VCA) is a process designed to accompany communities to be more resilient through the identification and assessment of their priority needs. The VCA provides a toolkit for community-lead assessments and solution finding processes that integrate information on existing risks, vulnerabilities and capacities and form the basis for successful community-based programming."
   text2b:     "The VCA allows the Red Cross Red Crescent National Societies to contextualize each step of the programming cycle to ensure it is focused on communities. Through this process, VCAs help to empower communities by making them risk-informed and building ownership in the identification and development of solutions to increase resilience."
-  text2c:     "The first VCA guide was created in 1999 at the request of National Societies, and it supports the IFRC’s core mandate to serve the most vulnerable. It was endorsed in 1999 by the General Assembly. Since its inception, the VCA has been successfully used around the globe by the IFRC and numerous external partners."
-  text2d:     "It is a vital, participatory, community-driven process that contributes to the ongoing efforts of the IFRC and member National Societies, as they the work with local communities to define needs and develop solutions to reduce vulnerabilities and strengthen community resilience."
+  text2c:     "The first VCA guide was created in 1999 at the request of National Societies, and it supports the IFRC’s core mandate to serve the most vulnerable. It was endorsed in 1999 by the General Assembly. From 2005 to 2008, four VCA guides were developed to support National Societies’ work with communities. In 2011, a global review of the VCA lead to the development of a guide on how to integrate climate change and urban risk."
+  text2d:     "Since its inception, the VCA has been successfully used worldwide by the IFRC and numerous external partners. It is a vital, participatory, community-driven process that contributes to the ongoing efforts of the IFRC and member National Societies, as they the work with local communities to define needs and develop solutions to reduce vulnerabilities and strengthen community resilience."
+  text2e: "IFRC Vulnerability and Capacity Assessment site"
+  ifrcUrl: http://www.ifrc.org/vca
+
+resources:
+  resources:  "Resources"
+  guidelines: "Vulnerability and Capacity Assessment Guidelines (EN)"
+  guidelines-url: "http://www.ifrc.org/Global/Publications/disasters/vca/Vca_en.pdf"
+  whatIs: "What is VCA"
+  whatIs-url: "http://www.ifrc.org/Global/Publications/disasters/vca/whats-vca-sp.pdf"
+  howTo: "How to do a VCA"
+  howTo-url: "http://www.ifrc.org/Global/Publications/disasters/vca/how-to-do-vca-sp.pdf"
+  trainingGuide:  "VCA training guide"
+  trainingGuide-url: "http://www.ifrc.org/Global/Publications/disasters/vca/vca-training-guide-es.pdf"
+  toolbox:  "VCA toolbox"
+  toolbox-url:  "http://www.ifrc.org/Global/Publications/disasters/vca/vca-toolbox-es.pdf"
 
 find:
   header:     "Find page (EN)"
