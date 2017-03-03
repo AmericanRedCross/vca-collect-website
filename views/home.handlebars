@@ -84,7 +84,8 @@ d3.selection.prototype.moveToFront = function() {
 var svg, projection, path, countries;
 var width, height;
 
-function setDimensions(){
+function setup(){
+
   width = document.getElementById('overview_map').offsetWidth;
   if(width / 2 <= window.innerHeight - 60) {
     height = width / 2;
@@ -92,9 +93,7 @@ function setDimensions(){
     height = window.innerHeight - 60;
     width = height * 2;
   }
-}
 
-function setup(){
   projection = d3.geoEckert3()
     .translate([0, 0])
     .scale(width / 2 / Math.PI);
@@ -106,38 +105,33 @@ function setup(){
       .append("g")
       .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
   countries = svg.append("g").classed("map-countries", true);
+  drawLayers();
 }
 
-// TODO: change styling so that the light red/pink countries aren't lost
-var quantize = d3.scaleQuantize()
-    .domain([0, 10])
-    .range(colorbrewer.Reds[9]);
-    // Every ColorBrewer Scale
-    // http://bl.ocks.org/mbostock/raw/5577023/
-
-function grabData(error, geo, docs) {
-  documents = docs;
-  countryCounts = d3.nest()
+function grabData(error, geo, data) {
+  // data.docs
+  //   {"type":"VCA","iso3":"BRA"}
+  // & data.countries
+  //   {"iso3":"MEX","id":88,"iso2":"MX","en":"Mexico","fr":"Mexique","es":"Estados Unidos Mexicanos","ns":"Mexican Red Cross","zone":"Americas"}
+  docs = d3.nest()
     .key(function(d) { return d.iso3; })
-    .rollup(function(v) { return d3.sum(v, function(d) { return 1; }); })
-    .map(docs);
+    .key(function(d) { return d.type; })
+    .map(data.docs)
+  admin = d3.nest()
+    .key(function(d) { return d.iso3; })
+    .map(data.countries)
   world = topojson.feature(geo, geo.objects.ne_50m).features;
-  giveStats();
-  drawLayers();
+  // giveStats();
+  setup();
 }
 
 // TODO: determine actual facts to be given, and move any text into the template + YML data
 function giveStats() {
-  var fact1 = "<h5>" + documents.length + " VCA reports have been uploaded.</h5>";
-  var fact2 = "<h5>" + "The reports are from " + countryCounts.size() + " countries.</h5>";
-  var fact3 = "<h5>" + d3.sum(documents, function(d) { return d.published }) + " reports are available for download.</h5>";
-  $("#overview__fact1").html(fact1);
-  $("#overview__fact2").html(fact2);
-  $("#overview__fact3").html(fact3);
+
 }
 
 function drawLayers() {
-  country = countries.selectAll("d").data(world);
+  var country = countries.selectAll("d").data(world);
   country.enter().insert("path")
       .attr("class", "country country__default")
       .attr("d", path)
@@ -155,43 +149,40 @@ function drawLayers() {
 }
 
 function updateMapColors() {
-
-  quantize.domain(d3.extent(d3.values(countryCounts)));
-  if(quantize.domain()[0] === 0 && quantize.domain()[1] === 0) {quantize.domain([0,1])}
   countries.selectAll('.country').each(function(d,i){
-    var thisCount = countryCounts.get(d.properties.iso);
-    if(!thisCount) {
-      // d3.select(this).style("fill", function(d){
-      //   return defaultFill;
-      // });
+    if(!docs.get(d.properties.iso)) {
+      // ...
     } else {
-      console.log(this)
-      d3.select(this)
-      .attr('data-count', thisCount)
-      .classed('country__active', true);
-      // .style("fill", function(d){
-        // return quantize(thisCount);
-      // });
+      if(docs.get(d.properties.iso).get('VCA')) {
+        d3.select(this).attr('data-vca', docs.get(d.properties.iso).get('VCA').length)
+          .classed('country__active', true);
+      }
+      if(docs.get(d.properties.iso).get('POA')) {
+        d3.select(this).attr('data-poa', docs.get(d.properties.iso).get('POA').length)
+          .classed('country__active', true);
+      }
     }
   });
 }
 
 function populateMapTooltip(d, el){
-  var tooltipText = "<span>" + d.properties.name;
-  var count = d3.select(el).attr('data-count');
-  tooltipText += count ? '<span> - ' + count + ' VCA' : '<span>';
-  tooltipText += (count>1) ? 's</span>' : '</span>';
-  tooltipText += "</span>";
+  var tooltipText = '<div>' + d.properties.name + '</div>';
+  var vca = d3.select(el).attr('data-vca');
+  var poa = d3.select(el).attr('data-poa');
+  tooltipText += vca ? '<small> ' + vca + ' VCA' : '';
+  tooltipText += (vca>1) ? 's</small>' : '</small>';
+  tooltipText += (vca && poa) ? ', ': '';
+  tooltipText += poa ? '<small> ' + poa + ' POA' : '';
+  tooltipText += (poa>1) ? 's</small>' : '</small>';
   $('#tooltip').append(tooltipText);
 }
 
 window.onload = function() {
-  setDimensions();
-  setup();
   d3.queue()
   	.defer(d3.json, '/data/ne_50m-simple-topo.json')
-  	.defer(d3.json, '/api/documents')
+  	.defer(d3.json, '/api/overview')
   	.await(grabData);
+
   $('body').mouseover(function(e) {
       //Set the X and Y axis of the tooltip
       $('#tooltip').css('top', e.pageY + 10 );
@@ -203,10 +194,8 @@ window.onload = function() {
 }
 
 function redraw() {
-  setDimensions();
   d3.select("#overview_map").select('svg').remove();
   setup();
-  drawLayers();
 }
 
 d3.select(window).on("resize", throttle);

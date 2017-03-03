@@ -459,6 +459,20 @@ api.get('/find', function(req, res) {
 
 });
 
+api.get('/overview', function(req, res) {
+  var countryQuery = "SELECT DISTINCT(documents.iso3), countries.* from documents INNER JOIN countries ON countries.iso3 = documents.iso3";
+  var docsQuery = "SELECT type, iso3 FROM documents";
+  flow.exec(
+    function() {
+      queryDb(countryQuery, this.MULTI('countries'))
+      queryDb(docsQuery, this.MULTI('docs'))
+    }
+    ,function(data) {
+      res.json( { docs: data.docs["1"], countries: data.countries["1"] })
+    }
+  )
+});
+
 api.get('/file/:rowid', function(req, res) {
   var query = "SELECT * FROM documents WHERE rowid = " + req.params.rowid;
   db.get(query, function(err, row) {
