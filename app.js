@@ -621,42 +621,60 @@ var AWS = require('aws-sdk');
 var s3 = new AWS.S3();
 var moment = require('moment');
 
-var removeFromS3 = function(key, cb) {
-  var params = {
-    Bucket: settings.app.s3bucket,
-    Key: key
-  };
-  s3.deleteObject(params, function(err, data) {
-    // if (err) console.log(err, err.stack);
-    // else     console.log(data);
-    cb(err, data);
-  });
-}
-
 var deleteDoc = function(req, res) {
   var rowid = req.params.rowid;
-  var selectQuery = "SELECT * FROM documents WHERE rowid = " + rowid;
-  db.get(selectQuery, function(err, row) {
-    var key = row.filename;
-    var deleteQuery = "DELETE FROM documents WHERE rowid = " + rowid;
-    db.run(deleteQuery, function(err) {
-      if(this.changes) {
-        req.flash('successMessage', 'Entry removed from table of records.');
-        removeFromS3(key, function(err, data){
-          if(err) {
-            req.flash('errorMessage', 'Apologies, it seems something went wrong deleting the file from S3 storage.');
-            res.redirect('/admin/documents');
-          } else {
-            req.flash('successMessage', 'File deleted from S3.');
-            res.redirect('/admin/documents');
-          }
-        })
+  var timestamp = moment().format("YYYY-MM-DD_HH-mm-ss");
+  var runDelete = function(query, cb) {
+    db.run(query, function(err) {
+      cb(err, this);
+    })
+  }
+
+  flow.exec(
+    function() {
+      var selectQuery = "SELECT * FROM documents WHERE rowid = " + rowid;
+      db.get(selectQuery, this);
+    }
+    ,function(err, row) {
+      row.deleted = timestamp;
+      this.tableEntry = row;
+      var deleteQuery = "DELETE FROM documents WHERE rowid = " + rowid;
+      // # need to break out the db.run because it returns a 'this' object
+      // # that contains the `sql`, `lastId`, and `changes`
+      // # and we can't seem to get it when db.run is directly part of the flow
+      runDelete(deleteQuery, this);
+    }
+    ,function(err, sqlReturn) {
+      if(sqlReturn.changes) {
+        req.flash('successMessage', ' entry removed from table of records');
+        // # upload a text file with document metadata from the database
+        var str = JSON.stringify(this.tableEntry);
+        var buf = Buffer.from(str);
+        var key = 'deleted/' + timestamp + "_" + this.tableEntry.filename + '.txt';
+        s3.upload({ Body: buf, Bucket: settings.app.s3bucket, Key: key }, this);
       } else {
-        req.flash('errorMessage', 'Apologies, it seems something went wrong removing the entry from the table.');
+        // # break out of the function chain
+        req.flash('errorMessage', ' something went wrong removing the entry from table of records');
         res.redirect('/admin/documents');
       }
-    });
-  });
+    }
+    ,function(err, data) {
+      // if (err) ...
+      // # copy the file to the archive folder
+      var key = 'deleted/' + timestamp + "_" + this.tableEntry.filename;
+      s3.copyObject({ Bucket: settings.app.s3bucket, CopySource:path.join(settings.app.s3bucket, this.tableEntry.filename), Key: key }, this);
+    }
+    ,function(err, data) {
+      // if (err) ...
+      // # delete the file out of the main folder
+      s3.deleteObject({ Bucket: settings.app.s3bucket, Key: this.tableEntry.filename }, this);
+    }
+    ,function(err, data) {
+      // if(err) ...
+      req.flash('successMessage', ' delete process should be completed');
+      res.redirect('/admin/documents');
+    }
+  );
 }
 
 var upload = multer({
