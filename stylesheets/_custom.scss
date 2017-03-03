@@ -117,11 +117,15 @@ body {
   fill: rgba(16,20,18,0.8);
   stroke-linecap: round;
 }
+.country__default.country__focus {
+  stroke: #000;
+  stroke-width: 1px;
+}
 .country__active {
   fill: $rc-red;
   stroke: $deep-red;
 }
-.country__focus {
+.country__active.country__focus {
   stroke: $deep-red;
   stroke-width: 2px;
 }
