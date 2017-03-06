@@ -15,6 +15,7 @@
     "body-parser": "^1.15.2",
     "connect-sqlite3": "^0.9.9",
     "cookie-parser": "^1.4.3",
+    "cron": "^1.2.1",
     "crypto": "0.0.3",
     "express": "^4.14.0",
     "express-flash": "0.0.2",

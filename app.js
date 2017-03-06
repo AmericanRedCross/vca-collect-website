@@ -718,7 +718,23 @@ app.post('/upload', upload.single('vcaFile'), function(req, res) {
   });
 });
 
+var CronJob = require('cron').CronJob;
 
+var backupDb = function() {
+  var body = fs.createReadStream(file);
+  var key = 'db-backups/' + moment().format("YYYY-MM-DD_HH-mm-ss") + "_site.db";
+  s3.upload({ Body: body, Bucket: settings.app.s3bucket, Key: key }, function(err, data) {
+    if(err) console.log("error backing up db: ", err);
+  });
+}
+var job = new CronJob({
+  // Runs every day at 01:00:00 AM
+  cronTime: '00 00 01 * * *',
+  onTick: backupDb,
+  start: false,
+  timeZone: 'America/New_York'
+});
+job.start();
 
 app.listen(settings.app.port, function() {
   console.log('app listening on port ' + settings.app.port);
