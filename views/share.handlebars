@@ -1,15 +1,15 @@
 {{> nav}}
 
 <div class="row">
-  <div class="small-8 small-offset-2 medium-6 medium-offset-3 columns box">
+  <div class="small-8 small-offset-2 medium-6 medium-offset-3 columns">
       <div id="errorMessage" class="callout warning hidden" data-closable>
-        <span><strong>{{text.common.error}}: </strong><span id="errorMessageText"></span></span>
+        <span><strong>{{text.common.error}}: </strong>{{text.common.errored}}</span>
         <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div id="successMessage" class="callout success hidden" data-closable>
-        <span><strong>{{text.common.success}}: </strong><span id="successMessageText"></span></span>
+        <span><strong>{{text.common.success}}: </strong>{{text.share.uploaded}}</span>
         <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
           <span aria-hidden="true">&times;</span>
         </button>

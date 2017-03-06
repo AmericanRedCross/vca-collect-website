@@ -26,6 +26,9 @@
           <option selected disabled hidden style="display: none" value="">Select the country...</option>
         </select>
       </label>
+      <label>Community:
+        <input id="community" type="text" name="community" placeholder="..." value="null" required>
+      </label>
       <label>Year:
         <select id="year" name="year" required>
           <option selected disabled hidden style="display: none" value="">Select year VCA was completed...</option>
@@ -89,9 +92,10 @@ function editRow(rowid) {
     $("input[name='type']").prop('checked', false);
     var typeStr = "input[name='type'][value='" + response.type + "']";
     $(typeStr).prop('checked', true);
-    $("#description").text(response.description);
+    $("#description").val(response.description);
     $("#country").find('option').attr('selected',null);
     $("#country").find('option[value=' + response.iso3 + ']').attr('selected','selected');
+    $("#community").val(response.community);
     $("#year").find('option').attr('selected',null);
     $("#year").find('option[value=' + response.year + ']').attr('selected','selected');
     $("#filename").find('span').text(response.filename);

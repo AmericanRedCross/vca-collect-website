@@ -47,6 +47,7 @@ share:
   commPrompt: "Select a community..."
   commAdd:    "Add a new community"
   yearPrompt: "Select year VCA was completed..."
+  uploaded:   "Thank you, the document should be submitted."
 
 common:
   allFieldsErr: "Please complete all form fields."
@@ -58,6 +59,7 @@ common:
   description: "Description"
   download:   "Download"
   error:      "Error"
+  errored:    "Sorry, it looks like something went wrong."
   false:      "False"
   filename:   "File name"
   fileSize:   "File size"
