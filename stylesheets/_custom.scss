@@ -190,3 +190,51 @@ table.dataTable thead .sorting_desc { background-image: url("../images/sort_desc
   font-size: 18px;
   margin: 50px;
 }
+
+#search-box .tt-menu{
+  max-height: 200px;
+  overflow-y: scroll;
+  overflow-y: -moz-scrollbars-vertical;
+}
+.twitter-typeahead {
+  width: 100%;
+}
+.typeahead {
+  background-color: #fff;
+}
+.tt-menu .empty-message {
+  text-align: center;
+}
+.tt-hint {
+  color: #999
+}
+.tt-menu {
+  text-align: left;
+  width: 100%;
+  padding: 8px 0;
+  background-color: #fff;
+  border: 1px solid $secondary-color;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+.tt-suggestion {
+  padding: 3px 20px;
+}
+.tt-suggestion:hover  {
+  cursor: pointer;
+  color: #fff;
+  background-color: $secondary-color;
+}
+.tt-suggestion.tt-cursor {
+  color: #fff;
+  background-color: $secondary-color;
+}
+.tt-highlight {
+  background-color: rgba(236,183,49,.6);
+}
+.tt-suggestion:hover .tt-highlight  {
+  font-weight: inherit;
+  background-color: inherit;
+}
+ p.tt-suggestion {
+  margin: 0;
+}

@@ -38,6 +38,9 @@
         <textarea id="description" type="text" name="description" placeholder="..." rows= "3" required></textarea>
       </label>
       <label>{{text.share.countryLabel}}
+        <div id="search-box">
+          <input class="typeahead" type="text" placeholder="{{text.share.countrysearch}}">
+        </div>
         <select id="iso3" name="iso3" required>
           <option selected disabled hidden style="display:none;" value="_error">{{text.share.countryPrompt}}</option>
         </select>
@@ -68,9 +71,15 @@
   </div>
 </div>
 
+
+
+<script src="/js/typeahead.bundle.js" charset="utf-8"></script>
+<script src="/js/handlebars-v4.0.5.js" charset="utf-8"></script>
+
 <script>
 
 var pageLanguage = "{{text.meta.language}}";
+var emptymessage = "{{text.common.emptymessage}}"
 window.onload = function() {
 
   // if the page loads with it hidden it won't spin when shown
@@ -105,12 +114,17 @@ window.onload = function() {
   })
 
   $.get("/api/countries", function(data) {
+    var searchData = [];
     for(var i=0, len=data.length; i<len; i++) {
-      var html = '<option value="' + data[i].iso3 + '">'
-      html += (data[i][pageLanguage] !== undefined) ? data[i][pageLanguage] : data[i]["en"];
-      html += '</option>';
+      var name = (data[i][pageLanguage] !== undefined) ? data[i][pageLanguage] : data[i]["en"];
+      var html = '<option value="' + data[i].iso3 + '">' + name + '</option>';
       $("#iso3").append(html);
+      searchData.push({
+        'name': name,
+        'iso3': data[i].iso3
+      })
     }
+    buildSearchBox(searchData);
   });
 
   clearForm = function(){
@@ -171,6 +185,55 @@ window.onload = function() {
     });
     return false;
   });
+
+
+  function buildSearchBox(data){
+    // constructs the suggestion engine
+    var countrySearch = new Bloodhound({
+      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+      queryTokenizer: Bloodhound.tokenizers.whitespace,
+      local: data,
+      sorter: function(a, b) {
+        if (a.name < b.name) {
+          return -1;
+        }
+        else if (a.name > b.name) {
+          return 1;
+        }
+        else return 0;
+
+      }
+    });
+    // kicks off the loading/processing of `local`
+    countrySearch.initialize();
+    $('#search-box .typeahead').typeahead({
+      // hint: true,
+      highlight: true,
+      minLength: 1
+    },
+    {
+      name: 'countrySearch',
+      displayKey: Handlebars.compile('\{\{name\}\}'),
+      limit: 20,
+      source: countrySearch.ttAdapter(),
+      templates: {
+        empty:[
+          '<div class="empty-message">',
+          '<i>' + emptymessage + '</i>',
+          '</div>'
+        ].join('\n'),
+        suggestion: Handlebars.compile('<p>\{\{name\}\}</p>')
+      }
+    }).on('typeahead:selected', function (eventObj, datum) {
+      selectedCountry(datum);
+    });
+  }
+
+  function selectedCountry(datum) {
+    $("#iso3").find('option[value=' + datum.iso3 + ']').attr('selected','selected');
+    $("#iso3").trigger('change')
+    $('#search-box .typeahead').typeahead('val', '');
+  }
 
 }
 
