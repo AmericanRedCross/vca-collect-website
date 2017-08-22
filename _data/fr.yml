@@ -34,8 +34,8 @@ resources:
   toolbox-url:  "http://www.ifrc.org/Global/Publications/disasters/vca/vca-toolbox-en.pdf"
 
 find:
-  header:     ""
-  about:      ""
+  header:     "Trouver"
+  about:      "About this page."
 
 share:
   sharePrompt: "Télécharger"

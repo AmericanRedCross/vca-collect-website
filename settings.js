@@ -21,6 +21,10 @@ settings.page = {
         text: "Inicio",
         url: "/es/"
       }
+      ,fr: {
+        text: "Page d’accueil",
+        url: "/fr/"
+      }
     }
     ,find: {
       en: {
@@ -28,8 +32,11 @@ settings.page = {
         url: "/find/"
       }
       ,es: {
-        text: "Encontrar",
-        url: "/es/encontrar/"
+        text: "Buscar",
+        url: "/es/buscar/"
+      },fr: {
+        text: "Trouver",
+        url: "/fr/trouver/"
       }
     }
     ,share: {
@@ -38,8 +45,11 @@ settings.page = {
         url: "/share/"
       }
       ,es: {
-        text: "Compartir",
-        url: "/es/compartir/"
+        text: "Subir",
+        url: "/es/subir/"
+      },fr: {
+        text: "Share",
+        url: "/fr/participer/"
       }
     }
   }
