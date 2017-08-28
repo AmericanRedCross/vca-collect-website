@@ -9,7 +9,7 @@
   <title></title>
 
   <link rel="stylesheet" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
-  <link rel="stylesheet" href="/css/nouislider.min.css">
+  <link rel="stylesheet" href="{{settings.nginxlocation}}css/nouislider.min.css">
   <link rel="stylesheet" href="{{settings.nginxlocation}}css/gulp.css">
 
 <style>
@@ -30,10 +30,10 @@ body {
       <ul class="menu">
         <li><a class="custom-navigation__link" href="/admin">Admin</a></li>
         {{#if user}}
-        <li><a class="custom-navigation__link" href="/admin/documents">Documents</a></li>
-        <li><a class="custom-navigation__link" href="/admin/users">Users</a></li>
+        <li><a class="custom-navigation__link" href="{{settings.nginxlocation}}admin/documents">Documents</a></li>
+        <li><a class="custom-navigation__link" href="{{settings.nginxlocation}}admin/users">Users</a></li>
         <li>
-          <form class="navbar-form" action="/logout" method="POST" >
+          <form class="navbar-form" action="{{settings.nginxlocation}}logout" method="POST" >
             <button type="submit" value="submit" class="hollow button">Log Out</button>
           </form>
         </li>

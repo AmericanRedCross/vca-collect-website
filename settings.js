@@ -14,44 +14,53 @@ settings.page = {
   nav: {
     home: {
       en: {
+        id: "link-home",
         text: "Home",
         url: "/"
       }
       ,es: {
+        id: "link-home",
         text: "Inicio",
-        url: "/es/"
+        url: "/es"
       }
       ,fr: {
+        id: "link-home",
         text: "Page d’accueil",
-        url: "/fr/"
+        url: "/fr"
       }
     }
     ,find: {
       en: {
+        id: "link-find",
         text: "Find",
-        url: "/find/"
+        url: "/find"
       }
       ,es: {
+        id: "link-find",
         text: "Buscar",
-        url: "/es/buscar/"
+        url: "/es/buscar"
       },fr: {
+        id: "link-find",
         text: "Trouver",
-        url: "/fr/trouver/"
+        url: "/fr/trouver"
       }
     }
-    ,share: {
-      en: {
-        text: "Share",
-        url: "/share/"
-      }
-      ,es: {
-        text: "Subir",
-        url: "/es/subir/"
-      },fr: {
-        text: "Share",
-        url: "/fr/participer/"
-      }
-    }
+    // ,share: {
+    //   en: {
+    //     id: "link-share",
+    //     text: "Share",
+    //     url: "/share"
+    //   }
+    //   ,es: {
+    //     id: "link-share",
+    //     text: "Subir",
+    //     url: "/es/subir"
+    //   },fr: {
+    //     id: "link-share",
+    //     text: "Participer",
+    //     url: "/fr/participer"
+    //   }
+    // }
   }
 }
 

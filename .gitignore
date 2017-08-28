@@ -1,10 +1,11 @@
 node_modules
 notes/*
 site.db
-sessions.db
+sessions
 public/fonts/*
 !public/fonts/README.md
 public/css/gulp.css
+test.js
 
 # OS generated files #
 ######################

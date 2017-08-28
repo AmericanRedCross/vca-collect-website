@@ -1,25 +1,94 @@
 {{> nav}}
 
+
+<div class="row">
+  <div id="map-header" class="small-12 medium-offset-1 medium-10 large-offset-2 large-8 columns box">
+    <h4 id="selected-country" style="display:none;">
+      <span id="country-name"> <!-- country name --> </span> &nbsp; <small id="clear-country" onClick="updateCountry(null);" class="subheader action-text"> <i class="fa fa-times-circle-o" aria-hidden="true"></i>  clear </small>
+    </h4>
+    <h4 id="no-selected-country" style="display:none;">
+      <span> {{text.find.global}} </span> &nbsp; <small class="subheader"> {{text.find.select}} </small>
+    </h4>
+
+    <p><small>Documents without identified locations will not appear on the map. X of Z geo-coded documents displayed.</small></p>
+  </div>
+</div>
+<div class="row">
+  <div class="small-12 medium-offset-1 medium-10 large-offset-2 large-8 columns box" style="padding:0;">
+    <div id="find-loader">
+      <h1><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></h1>
+      <span class="sr-only">Loading...</span>
+    </div>
+    <div id="overview_map"></div>
+  </div>
+</div>
+
 <div id="country-cards" class="row small-up-2 medium-up-3 large-up-4" data-equalizer>
 </div>
 
 
-<div id="documents-header" class="row expanded" style="display:none;">
+<!-- <div id="documents-header" class="row expanded" style="display:none;">
   <div class="small-12 columns box" >
     <div style="margin:10px;">
       <h4><span id="selected-country">Country Name</span> &nbsp; <small onClick="countryChoice(null);" class="subheader action-text"> <i class="fa fa-undo" aria-hidden="true"></i>  {{text.common.back}} </small></h4>
     </div>
   </div>
 </div>
+<br> -->
 <br>
-
 <div id="documents-cards" class="row small-up-2 medium-up-3 large-up-4" data-equalizer>
 </div>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.6.0/d3.min.js"></script>
+<script src="/js/topojson.v2.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.0.6/dist/MarkerCluster.css" />
+<script src="https://unpkg.com/leaflet.markercluster@1.0.6/dist/leaflet.markercluster.js"></script>
 <script>
+
 var pageLanguage = "{{text.meta.language}}";
+var urlIso = window.location.search.substring(1);
+
+var map = L.map('overview_map').setView([0, 0], 2);
+L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+	maxZoom: 19,
+	attribution: 'map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> contributors, tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>'
+}).addTo(map);
+
+var markers = L.markerClusterGroup({
+  showCoverageOnHover: false,
+  maxClusterRadius: 40
+});
+map.addLayer(markers);
+
+L.svg().addTo(map);
+// pick up the SVG from the map object
+var svg = d3.select('#overview_map').select('svg');
+var geoGroup = svg.append('g').attr('id', 'geo');
+var mapped;
+
+function projectPoint(x, y){
+  var point = map.latLngToLayerPoint(new L.LatLng(y, x));
+  this.stream.point(point.x, point.y);
+}
+
+var transform = d3.geoTransform({point: projectPoint});
+var path = d3.geoPath().projection(transform);
+
+d3.selection.prototype.moveToFront = function() {
+  return this.each(function(){
+    this.parentNode.appendChild(this);
+  });
+};
+d3.selection.prototype.moveToBack = function() {
+    return this.each(function() {
+        var firstChild = this.parentNode.firstChild;
+        if (firstChild) {
+            this.parentNode.insertBefore(this, firstChild);
+        }
+    });
+};
 
 var typeIcon = function(extension){
   switch(extension) {
@@ -52,120 +121,160 @@ var typeIcon = function(extension){
   }
 };
 
-window.onload = function() {
-  $.get("/api/find", function(response) {
-
-    var data = response;
-    // data.docs
-    //   {"rowid":1,"published":0,"type":"VCA","iso3":"BRA","community":"sunrise","org":null,"title":"bob","year":2017,"size":"425.53 KB","filename":"Activation_Flow_2016_March_v2_2017-02-17_14-36-57.pdf","description":"this is about bob. with support from Finnish RC."}
-    // & data.countries
-    //   {"iso3":"MEX","id":88,"iso2":"MX","en":"Mexico","fr":"Mexique","es":"Estados Unidos Mexicanos","ns":"Mexican Red Cross","zone":"Americas"}
-    docs = d3.nest()
-      .key(function(d) { return d.iso3; })
-      .key(function(d) { return d.type; })
-      .map(data.docs)
-    countries = d3.nest()
-      .key(function(d) { return d.iso3; })
-      .map(data.countries)
-
-    countryChoice = function(iso3) {
-      if(iso3 == null) {
-        $('#documents-header').hide();
-        $('#documents-cards').hide();
-        $('#country-cards').fadeIn();
-
-      } else {
-
-        $('#documents-header').fadeIn();
-        $('#documents-cards').fadeIn();
-        $('#country-cards').hide();
-
-        var name = '<img class="country-flag" src="/images/flags/4x3/' + countries.get(iso3)[0].iso2.toLowerCase() + '.svg" >';
-        name += (countries.get(iso3)[0][pageLanguage] !== undefined) ? countries.get(iso3)[0][pageLanguage] : countries.get(iso3)[0]["en"];
-
-        // setTimeout(function(){ alert("Hello"); }, 3000);
-
-        // d3.select('#country-cards').transition().duration(250)
-        //   .style('opacity', 1e-6);
-        $('#selected-country').html(name);
-        // // $('#documents-header').fadeIn();
-        // d3.select('#documents-header').transition().delay(250).duration(250)
-        //   .style('opacity', 1);
-
-
-        var filteredDocs = data.docs.filter(function(d) { return d.iso3 == iso3 });
-        var documentCards = d3.select('#documents-cards').selectAll('div.column').data(filteredDocs, function(d) { return d.rowid; });
-
-        // EXIT
-        documentCards.exit().remove();
-        // no UPDATE
-        // ENTER
-        documentCards.enter().append('div')
-          .attr('class', 'column')
-          .style('opacity', 1e-6)
-          .html(function(d) {
-              var download = "";
-              if(d.published == 1) {
-                var extension = d.filename.substr(d.filename.lastIndexOf('.'));
-                download = '<a href="/api/file/' + d.id + '" download>' + typeIcon(extension) + ' ' + d.size + '</a><br>';
-              }
-              var html = '<div class="card" data-equalizer-watch>' +
-              '<div class="card-section">' +
-              '<h5><i class="fa fa-fw fa-map-marker subheader" aria-hidden="true"></i> ' + d.community + '<br><span class=""><i class="fa fa-fw fa-file-text-o subheader" aria-hidden="true"></i> ' + d.title + '</span></h5>' +
-              '<p><small>' + d.type + ', ' + d.year + '<br>' +
-              d.description + '</br>' +
-              '</small>' + download + '</p>' +
-              '</div>' +
-              '</div>';
-              return html;
-            })
-          .transition().duration(250)
-            .style('opacity', 1);
-
-        d3.select('#documents-cards').selectAll('div.column').sort(function(a, b) {
-          return d3.ascending(a.community, b.community);
-        })
-      }
-
-    }
-
-    countryCards = d3.select('#country-cards').selectAll('#country-cards div.column').data(data.countries);
-    countryCards.enter().append('div')
-      .attr('class', 'column')
-      .style('opacity', 1e-6)
-      .html(function(d) {
-          var counts = [];
-          docs.get(d.iso3).each(function(value, key) {
-            counts.push('<small>' + value.length  + ' ' + key + '</small>');
-          });
-          var html = '<div class="card country-card" onClick="countryChoice(' + "'" + d.iso3 + "'" + ');" data-equalizer-watch>' +
-            '<div class="card-section" style="padding-bottom:0;">' +
-            '<img class="country-flag" src="/images/flags/4x3/' + d.iso2.toLowerCase() + '.svg" >' +
-            '<h5>';
-          html += (d[pageLanguage] !== undefined) ? d[pageLanguage] : d["en"];
-          html += '</h5>' + counts.join(', ');
-          html += '</div></div>';
-          return html;
-        })
-      .transition().duration(250)
-        .style('opacity', 1);
-
-    d3.select('#country-cards').selectAll('div.column').sort(function(a, b) {
-      var alpha = (a[pageLanguage] !== undefined) ? a[pageLanguage] : a["en"];
-      var beta = (b[pageLanguage] !== undefined) ? b[pageLanguage] : b["en"];
-      return d3.ascending(alpha, beta);
-    })
-
-
-
-
-
-  });
+var formatBytes = function(bytes, decimals) {
+   if(bytes == 0) return '0 Bytes';
+   var k = 1000,
+       dm = decimals + 1 || 3,
+       sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+       i = Math.floor(Math.log(bytes) / Math.log(k));
+   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
 
-// $('#country-cards').foundation('destroy')
-// d3.select('#country-cards').property('data-equalizer', true).attr('data-equalize-by-row','true')
-// new Foundation.Equalizer($('#country-cards'));
+window.onload = function(){
+
+  d3.queue()
+    .defer(d3.json, '/data/ne_50m-simple-topo.json')
+    .defer(d3.json, '/api/all')
+    .await(buildPage);
+}
+
+var updateCountry = function(iso) {
+  if(iso){
+    var name = '<img class="country-flag" src="/images/flags/4x3/' + countries.get(iso)[0].iso2.toLowerCase() + '.svg" >';
+    name += (countries.get(iso)[0][pageLanguage] !== undefined) ? countries.get(iso)[0][pageLanguage] : countries.get(iso)[0]["en"];
+    $('#country-name').html(name);
+    $('#selected-country').show();
+    $('#no-selected-country').hide();
+    mapped.classed("find-country__active", false);
+    mapped.each(function(d){
+      if(d.properties.iso === iso) {
+        d3.select(this).moveToFront();
+        d3.select(this).classed("find-country__active", true);
+        var bounds = d3.geoBounds(d)
+        map.fitBounds([[ bounds[0][1], bounds[0][0] ],[ bounds[1][1], bounds[1][0] ]]);
+      }
+    })
+    updateDocs(iso);
+  } else {
+    var findUrl = $("#link-find").attr("href");
+    window.history.pushState(null, '', findUrl);
+    mapped.classed("find-country__active", false);
+    $('#country-name').html('');
+    $('#selected-country').hide();
+    $('#no-selected-country').show();
+    map.fitBounds(L.geoJson(world).getBounds());
+    updateDocs();
+  }
+}
+
+var centroidOptions = {
+    radius: 8,
+    fillColor: "#ED1B2E",
+    color: "#FFF",
+    weight: 2.5,
+    opacity: 1,
+    fillOpacity: 1
+};
+
+var updateDocs = function(iso){
+  markers.clearLayers()
+  for (var i = 0; i < docs.length; i++) {
+    // does this test work? whats a better test for a valid latlng?
+    if( parseFloat(docs[i].lat) < 90 && parseFloat(docs[i].lat) > -90 && parseFloat(docs[i].lng) < 180 && parseFloat(docs[i].lng) > -180 ) {
+      var marker = L.circleMarker(new L.LatLng(parseFloat(docs[i].lat), parseFloat(docs[i].lng)), centroidOptions);
+
+      if(iso){
+          if(docs[i].iso3 === iso) { markers.addLayer(marker); }
+      } else {
+        markers.addLayer(marker);
+      }
+    }
+  }
+
+  var filteredDocs = docs.filter(function(d) {
+    if(iso) { return d.iso3 == iso } else { return true }
+  });
+
+  var documentCards = d3.select('#documents-cards').selectAll('div.column').data(filteredDocs, function(d) { return d.rowid; });
+
+  // EXIT
+  documentCards.exit().remove();
+  // no UPDATE
+  // ENTER
+  documentCards.enter().append('div')
+    .attr('class', 'column')
+    .style('opacity', 1e-6)
+    .html(function(d) {
+      console.log(d)
+        var download = "";
+        if(d.published == 1) {
+          var extension = d.filename.substr(d.filename.lastIndexOf('.'));
+          download = '<a href="/api/file/' + d.rowid + '" download>' + typeIcon(extension) + ' ' + formatBytes(d.bytes, 1) + '</a><br>';
+        }
+        var html = '<div class="card" data-equalizer-watch>' +
+        '<div class="card-section">' +
+        '<h6><i class="fa fa-fw fa-map-marker subheader" aria-hidden="true"></i> ' + d.community + '<br><span class=""><i class="fa fa-fw fa-file-text-o subheader" aria-hidden="true"></i> ' + d.title + '</span></h6>' +
+        '<p><small>' + d.type + ', ' + d.year + '<br>' +
+        d.description + '</br>' +
+        '</small>' + download + '</p>' +
+        '</div>' +
+        '</div>';
+        return html;
+      })
+    .transition().duration(250)
+      .style('opacity', 1);
+
+  d3.select('#documents-cards').selectAll('div.column').sort(function(a, b) {
+    return d3.ascending(a.community, b.community);
+  })
+
+}
+
+
+var buildPage = function(error, geo, data) {
+  // save our fetched data
+  docs = data.docs;
+  docsIsos = d3.nest()
+    .key(function(d) { return d.iso3; })
+    .map(data.docs)
+  countries = d3.nest()
+    .key(function(d) { return d.iso3; })
+    .map(data.countries)
+  world = topojson.feature(geo, geo.objects.ne_50m).features.filter(function(d) { return !docsIsos.get(d.properties.iso) == false; });
+
+  // draw the countries with documents
+  mapped = geoGroup.selectAll("path")
+    .data(world, function(d){ return d.properties.iso; })
+    .enter().append("path")
+    .attr("class", "find-country")
+    .attr("d", path)
+    .on("mouseover", function(d){
+      d3.select(this).moveToFront();
+      d3.select(this).classed("find-country__focus", true);
+    })
+    .on("mouseout", function(d){
+      d3.select(this).classed("find-country__focus", false);
+      d3.select(".find-country__active").moveToFront();
+      $('#tooltip').empty();
+    })
+    .on('click', function(d){
+      var findUrl = $("#link-find").attr("href");
+      findUrl += "?" + d.properties.iso;
+      window.history.pushState(null, '', findUrl);
+      updateCountry(d.properties.iso);
+    })
+
+  updatePath = function(){ mapped.attr("d", path); }
+  map.on('zoom move viewreset', updatePath);
+  updatePath();
+
+
+  $("#find-loader").hide();
+  updateCountry(urlIso);
+
+
+}
+
 
 
 </script>

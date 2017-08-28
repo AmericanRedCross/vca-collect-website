@@ -36,6 +36,9 @@ resources:
 find:
   header:     "Trouver"
   about:      "About this page."
+  global:     "Global"
+  select:     "Click a country to filter."
+
 
 share:
   sharePrompt: "Télécharger"

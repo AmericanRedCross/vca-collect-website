@@ -12,6 +12,15 @@ var LocalStrategy = require('passport-local').Strategy;
 var bcrypt = require('bcrypt');
 const saltRounds = 10;
 
+
+
+// TODO:
+// fix document table column references in app.js
+// add in country name as a hidden field for upload
+// redo find page
+// map on main page links to 'country pages' on find page
+
+
 // helper functions
 var formatBytes = function(bytes, decimals) {
    if(bytes == 0) return '0 Bytes';
@@ -43,18 +52,24 @@ db.run("CREATE TABLE IF NOT EXISTS users ( id INTEGER PRIMARY KEY AUTOINCREMENT,
 });
 
 // initialize db table for documents
-db.run('CREATE TABLE IF NOT EXISTS documents ( ' +
+db.run('CREATE TABLE IF NOT EXISTS documents (' +
   'rowid INTEGER PRIMARY KEY AUTOINCREMENT, ' +
   'published INTEGER DEFAULT 0, ' +
-  'type TEXT, ' +
-  'iso3 TEXT, ' +
-  'community TEXT, ' +
-  'org TEXT, ' +
-  'title TEXT, ' +
-  'year INTEGER, ' +
-  'size TEXT, ' +
-  'filename STRING, ' +
-  'description TEXT' + ' )', function(err) { if(err) { console.log(err); } });
+  'type TEXT, ' +  //
+  'iso3 TEXT, ' +  //
+  'country TEXT, ' +  //
+  'community TEXT, ' + //
+  'title TEXT, ' + //
+  'year INTEGER, ' + //
+  'lang TEXT, ' + //
+  'descriptionlocal TEXT, ' + //
+  'description TEXT, ' +  //
+  'bytes INTEGER, ' +  //
+  'lat REAL, ' +  //
+  'lng REAL, ' +  //
+  'comments TEXT, ' +  //
+  'filename TEXT ' +  //
+  ')', function(err) { if(err) { console.log(err); } });
 
   // initialize db table for country list
   db.run('CREATE TABLE IF NOT EXISTS countries ( id INTEGER PRIMARY KEY AUTOINCREMENT, iso3 TEXT, iso2 TEXT, en TEXT, fr TEXT, es TEXT, ns TEXT, zone TEXT )', function(err) {
@@ -347,6 +362,7 @@ app.use(express.static('public'));
 // ####################
 var english = express.Router();
 var spanish = express.Router();
+var french = express.Router();
 
 // route middleware that will happen on every request
 english.use(function(req, res, next) {
@@ -367,6 +383,15 @@ spanish.use(function(req, res, next) {
     // continue to the route
     next();
 });
+french.use(function(req, res, next) {
+    // Get language strings, or throw exception on error
+    try {
+      var translation = yaml.safeLoad(fs.readFileSync('./_data/fr.yml', 'utf8'));
+      req.language = translation;
+    } catch (e) { console.log(e); }
+    // continue to the route
+    next();
+});
 
 // # HOME
 english.get('/', function(req, res) {
@@ -381,6 +406,12 @@ spanish.get('/', function(req, res) {
     text: req.language
 	});
 });
+french.get('/', function(req, res) {
+	res.render('home',{
+    settings: settings.page,
+    text: req.language
+	});
+});
 
 // # FIND
 english.get('/find', function(req, res) {
@@ -389,7 +420,13 @@ english.get('/find', function(req, res) {
     text: req.language
 	});
 });
-spanish.get('/encontrar', function(req, res) {
+spanish.get('/buscar', function(req, res) {
+	res.render('find',{
+    settings: settings.page,
+    text: req.language
+	});
+});
+french.get('/trouver', function(req, res) {
 	res.render('find',{
     settings: settings.page,
     text: req.language
@@ -403,7 +440,13 @@ english.get('/share', function(req, res) {
     text: req.language
 	});
 });
-spanish.get('/compartir', function(req, res) {
+spanish.get('/subir', function(req, res) {
+	res.render('share',{
+    settings: settings.page,
+    text: req.language
+	});
+});
+french.get('/participer', function(req, res) {
 	res.render('share',{
     settings: settings.page,
     text: req.language
@@ -413,6 +456,7 @@ spanish.get('/compartir', function(req, res) {
 app.use('/', english);
 app.use('/en', english);
 app.use('/es', spanish);
+app.use('/fr', french);
 
 
 // API
@@ -437,8 +481,8 @@ api.get('/documents/:rowid', function(req, res) {
   }
 });
 
-api.get('/find', function(req, res) {
-  var countryQuery = "SELECT DISTINCT(documents.iso3), countries.* from documents INNER JOIN countries ON countries.iso3 = documents.iso3";
+api.get('/all', function(req, res) {
+  var countryQuery = "SELECT * from countries";
   var docsQuery = "SELECT * FROM documents";
   // var q = queue.queue();
   // q.defer(queryDb, countryQuery);
@@ -460,17 +504,21 @@ api.get('/find', function(req, res) {
 });
 
 api.get('/overview', function(req, res) {
-  var countryQuery = "SELECT DISTINCT(documents.iso3), countries.* from documents INNER JOIN countries ON countries.iso3 = documents.iso3";
-  var docsQuery = "SELECT type, iso3 FROM documents";
-  flow.exec(
-    function() {
-      queryDb(countryQuery, this.MULTI('countries'))
-      queryDb(docsQuery, this.MULTI('docs'))
-    }
-    ,function(data) {
-      res.json( { docs: data.docs["1"], countries: data.countries["1"] })
-    }
-  )
+  // var countryQuery = "SELECT DISTINCT(documents.iso3), countries.* from documents INNER JOIN countries ON countries.iso3 = documents.iso3";
+  // var docsQuery = "SELECT type, iso3 FROM documents";
+  var query = "SELECT iso3, country, count(*) AS count from documents GROUP BY iso3"
+  queryDb(query, function(err,rows){
+    res.json(rows)
+  })
+  // flow.exec(
+  //   function() {
+  //     queryDb(countryQuery, this.MULTI('countries'))
+  //     queryDb(docsQuery, this.MULTI('docs'))
+  //   }
+  //   ,function(data) {
+  //     res.json( { docs: data.docs["1"], countries: data.countries["1"] })
+  //   }
+  // )
 });
 
 api.get('/file/:rowid', function(req, res) {

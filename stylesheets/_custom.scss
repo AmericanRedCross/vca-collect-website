@@ -84,8 +84,11 @@ body {
 
 // css for _includes/find.html
 // ###############################
-
-#documents-header .country-flag {
+#find-loader {
+  text-align: center;
+  margin: 50px;
+}
+#map-header .country-flag {
   width: 34px;
   float: left;
   margin-right: 15px;
@@ -102,19 +105,89 @@ body {
   padding-top: 4px;
 }
 
+.find-country {
+  fill: rgba(237, 27, 46, 0.2);
+  stroke: $deep-red;
+  stroke-width: 1px;
+  cursor: pointer;
+  pointer-events: all;
+  stroke-linecap: round;
+}
+.find-country.find-country__focus {
+  stroke: $rc-red;
+  stroke-width: 2px;
+}
+.find-country.find-country__active {
+  stroke: $rc-red;
+  stroke-width: 2px;
+  fill: none;
+}
+
+/*styling for marker clusters*/
+.marker-cluster {
+	background-clip: padding-box;
+	border-radius: 20px;
+}
+.marker-cluster div {
+	width: 30px;
+	height: 30px;
+	margin-left: 5px;
+	margin-top: 5px;
+	text-align: center;
+	border-radius: 15px;
+	font: 12px "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+.marker-cluster span {
+	line-height: 30px;
+}
+.marker-cluster-small {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+.marker-cluster-small div {
+  background-color: rgba(237, 27, 46, 0.7);
+}
+
+.marker-cluster-medium {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+.marker-cluster-medium div {
+  background-color: rgba(237, 27, 46, 0.7);
+}
+
+.marker-cluster-large {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+.marker-cluster-large div {
+  background-color: rgba(237, 27, 46, 0.7);
+}
+.marker-cluster div {
+  color: #FFF;
+  text-align: center;
+  border-radius: 15px;
+  font: bold 12px "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
 // css for _includes/overview.html
 // ###############################
 
 #overview_map {
   width: 100%;
-  text-align:center;
+  height: 450px;
+}
+#overview_map svg path {
+  pointer-events: all;
+}
+.leaflet-container {
+    background-color:rgba(255,255,255,0.4);
 }
 .overview_fact {
   text-align: center;
 }
 .country__default {
-  fill: #101412;
-  fill: rgba(16,20,18,0.8);
+  cursor: pointer;
+  pointer-events: all;
+  fill: #404341;
+  // fill: rgba(16,20,18,0.8);
   stroke-linecap: round;
 }
 .country__default.country__focus {

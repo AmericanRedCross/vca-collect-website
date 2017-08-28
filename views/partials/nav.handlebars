@@ -7,7 +7,7 @@
           {{#each settings.nav}}
             {{#each this}}
               {{#eq @key ../../text.meta.language}}
-                <li><a class="custom-nav__link action-text" href="{{url}}"><small>{{text}}</small></a></li>
+                <li><a class="custom-nav__link action-text" id="{{this.id}}" href="{{url}}"><small>{{text}}</small></a></li>
               {{/eq}}
             {{/each}}
           {{/each}}
