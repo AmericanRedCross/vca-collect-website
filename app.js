@@ -507,7 +507,7 @@ api.get('/all', function(req, res) {
 api.get('/overview', function(req, res) {
   // var countryQuery = "SELECT DISTINCT(documents.iso3), countries.* from documents INNER JOIN countries ON countries.iso3 = documents.iso3";
   // var docsQuery = "SELECT type, iso3 FROM documents";
-  var query = "SELECT iso3, country, count(*) AS count from documents GROUP BY iso3"
+  var query = "SELECT iso3, type, country, year from documents"
   queryDb(query, function(err,rows){
     res.json(rows)
   })

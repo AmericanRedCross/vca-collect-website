@@ -13,17 +13,37 @@
 
 
 <!-- TODO: put text for facts in YML and only add in numbers in the js -->
-<!-- <div class="row">
-  <div class="small-3 column">
-    <div id="overview__fact1" class="overview_fact"></div>
+<div class="row">
+  <div class="small-12 medium-offset-1 medium-10 large-offset-2 large-8 columns about-block box">
+    <div class="row">
+      <div class="small-4 column">
+        <div class="overview_fact">
+          <h3>
+            <span id="fact_doc-count">5</span> <i class="fa fa-file-text-o" aria-hidden="true"></i>
+            <br>{{text.common.documents}}
+          </h3>
+        </div>
+      </div>
+      <div class="small-4 column">
+        <div class="overview_fact">
+          <h3>
+            <span id="fact_country-count">5</span> <i class="fa fa-map-marker" aria-hidden="true"></i>
+            <br>{{text.common.countries}}
+          </h3>
+        </div>
+      </div>
+      <div class="small-4 column">
+        <div class="overview_fact">
+          <h3>
+            <span id="fact_year-count">5</span> <i class="fa fa-calendar" aria-hidden="true"></i>
+            <br>{{text.common.years}}
+          </h3>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="small-3 column">
-    <div id="overview__fact2" class="overview_fact"></div>
-  </div>
-  <div class="small-3 column">
-    <div id="overview__fact3" class="overview_fact"></div>
-  </div>
-</div> -->
+</div>
+<br>
 
 <!-- about-block box -->
 <div class="row">
@@ -79,7 +99,11 @@
 var pageLanguage = "{{text.meta.language}}";
 // get country names in other languages?
 
-var map = L.map('overview_map').setView([0, 0], 2);
+var map = L.map('overview_map', {
+  scrollWheelZoom: false,
+  center: [0,0],
+  zoom: 2
+});
 // initialize the SVG layer for D3 drawn features
 L.svg().addTo(map);
 // pick up the SVG from the map object
@@ -110,24 +134,20 @@ d3.selection.prototype.moveToBack = function() {
 };
 
 function grabData(error, geo, data) {
-  // data.docs
-  //   {"type":"VCA","iso3":"BRA"}
-  // & data.countries
-  //   {"iso3":"MEX","id":88,"iso2":"MX","en":"Mexico","fr":"Mexique","es":"Estados Unidos Mexicanos","ns":"Mexican Red Cross","zone":"Americas"}
-  docs = d3.nest()
-    .key(function(d) { return d.iso3; })
-    // .key(function(d) { return d.type; })
-    .map(data)
-  // admin = d3.nest()
-  //   .key(function(d) { return d.iso3; })
-  //   .map(data.countries)
-  world = topojson.feature(geo, geo.objects.ne_50m).features;
-  // giveStats();
-  drawMap();
-}
 
-// TODO: determine actual facts to be given, and move any text into the template + YML data
-function giveStats() {
+  isoMap = d3.nest()
+    .key(function(d) { return d.iso3; })
+    .map(data)
+  yearMap = d3.nest()
+    .key(function(d) { return d.year; })
+    .map(data)
+  world = topojson.feature(geo, geo.objects.ne_50m).features;
+
+  $("#fact_doc-count").text(data.length)
+  $("#fact_country-count").text(isoMap.entries().length)
+  $("#fact_year-count").text(yearMap.entries().length)
+
+  drawMap();
 
 }
 
@@ -154,19 +174,11 @@ function drawMap() {
       window.location.href = findUrl;
     })
     .each(function(d,i){
-      if(!docs.get(d.properties.iso)) {
+      if(!isoMap.get(d.properties.iso)) {
         // ...
       } else {
-          d3.select(this).attr('data-count', docs.get(d.properties.iso)[0]['count'])
+          d3.select(this).attr('data-count', isoMap.get(d.properties.iso).length)
             .classed('country__active', true);
-        // if(docs.get(d.properties.iso).get('VCA')) {
-        //   d3.select(this).attr('data-vca', docs.get(d.properties.iso).get('VCA').length)
-        //     .classed('country__active', true);
-        // }
-        // if(docs.get(d.properties.iso).get('POA')) {
-        //   d3.select(this).attr('data-poa', docs.get(d.properties.iso).get('POA').length)
-        //     .classed('country__active', true);
-        // }
       }
     });
 
