@@ -28,15 +28,31 @@
         <fieldset>
           <input type="radio" name="type" value="VCA" id="VCA" required><label for="VCA">VCA</label>
           <input type="radio" name="type" value="POA" id="POA"><label for="POA">POA</label>
+          <input type="radio" name="type" value="VCA/POA" id="VCA/POA"><label for="VCA/POA">VCA/POA</label>
         </fieldset>
       </label>
+      <label>{{text.common.language}}
+        <select id="lang" name="lang" aria-describedby="languageHelpText" required>
+          <option selected disabled hidden style="display:none;" value="">{{text.share.languagePrompt}}</option>
+          <option value="en">English</option>
+          <option value="es">Español</option>
+          <option value="fr">Français</option>
+          <option value="pt">Português</option>
+        </select>
+      </label>
+      <input type="hidden" id="language" name="language" value="" />
+      <p class="help-text" id="languageHelpText">{{text.share.languageHelp}} <a href="mailto:daniel.joseph@redcross.org">daniel.joseph@redcross.org</a></p>
 
       <label> {{text.share.titlePrompt}}
         <input id="title" type="text" name="title" placeholder="..." required>
       </label>
-      <label> {{text.common.description}}
-        <textarea id="description" type="text" name="description" placeholder="..." rows= "3" required></textarea>
+      <label> {{text.share.descripLocal}} <span id="selectedLanguage"></span>
+        <textarea id="descriptionlocal" type="text" name="descriptionlocal" placeholder="..." rows= "3" required></textarea>
       </label>
+      <label id="descriptionen-input" style="display:none;"> {{text.share.descripEn}}
+        <textarea id="descriptionen" type="text" name="descriptionen" placeholder="..." rows= "3"></textarea>
+      </label>
+
       <label>{{text.share.countryLabel}}
         <div id="search-box">
           <input class="typeahead" type="text" placeholder="{{text.share.countrysearch}}">
@@ -44,6 +60,8 @@
         <select id="iso3" name="iso3" required>
           <option selected disabled hidden style="display:none;" value="_error">{{text.share.countryPrompt}}</option>
         </select>
+        <input type="hidden" id="country" name="country" value="" />
+
       </label>
       <label>{{text.common.community}}
         <select id="community" name="community" disabled required>
@@ -92,7 +110,20 @@ window.onload = function() {
     $("#selectedFile").text(this.files[0].name);
   })
 
+  $("#lang").on('change', function() {
+    var languageName = $("#lang option:selected").text();
+    $("#language").val(languageName);
+    $("#selectedLanguage").text(languageName);
+    if($("#lang option:selected").val() === "en"){
+      $("#descriptionen-input").hide();
+      $("#descriptionen").val('');
+    } else {
+      $("#descriptionen-input").show();
+    }
+  })
+
   $("#iso3").on('change', function() {
+    $("#country").val( $("#iso3").find(":selected").text() );
     $("#community").prop("disabled", true);
     $("#community").find(".community_options").remove();
     $("#community").val('_error');
@@ -134,9 +165,14 @@ window.onload = function() {
   clearForm = function(){
     $("#upload").find("input[type=text]").val('');
     $('input[type=radio]').attr('checked',false);
-    $("#description").val('');
+    $("#descriptionlocal").val('');
+    $("#descriptionen").val('');
+    $("#descriptionen-input").hide();
     $("#year").val('');
     $("#iso3").val('_error');
+    $("#lang").val('');
+    $("#language").val('');
+    $("#selectedLanguage").text('');
     $("#community").prop("disabled", true);
     $("#community_new").prop("disabled", true);
     $("#community").val('_error');

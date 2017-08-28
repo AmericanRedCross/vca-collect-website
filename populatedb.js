@@ -24,7 +24,7 @@ fs.readFile('./_data/db-start.csv', 'utf8', function(err, data) {
         for(var key in documents[i]){
           valueArray.push(documents[i][key])
         }
-        db.run("INSERT INTO documents (published,filename,type,iso3,country,title,community,year,lang,descriptionlocal,description,bytes,lat,lng,comments) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", valueArray, function(err){ console.log(err)});
+        db.run("INSERT INTO documents (published,filename,type,iso3,country,title,community,year,lang,language,descriptionlocal,descriptionen,bytes,lat,lng,comments) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", valueArray, function(err){ console.log(err)});
     }
 
   })

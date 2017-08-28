@@ -49,6 +49,10 @@ share:
   countryPrompt: "Select a country..."
   commPrompt: "Select a community..."
   commAdd:    "Add a new community"
+  descripEn:  "Provide a description of the document in English (optional)"
+  descripLocal: "Provide a description of the document in "
+  languageHelp: "Please email if the document language is not available in the dropdown menu: "
+  languagePrompt: "Select language of the document"
   yearPrompt: "Select year VCA was completed..."
   uploaded:   "Thank you, the document should be submitted."
 
@@ -67,6 +71,7 @@ common:
   false:        "False"
   filename:     "File name"
   fileSize:     "File size"
+  language:     "Language"
   menu:         "Menu"
   submit:       "Submit"
   success:      "Success"

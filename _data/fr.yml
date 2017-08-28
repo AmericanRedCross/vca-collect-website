@@ -50,6 +50,10 @@ share:
   countryPrompt: "Sélectionnez un pays..."
   commPrompt: "Sélectionnez une communité..."
   commAdd:    "Ajoutez une nouvelle communité"
+  descripEn:  "Provide a description of the document in English (optional)"
+  descripLocal: "Provide a description of the document in "
+  languageHelp: "Please email if the document language is not available in the dropdown menu: "
+  languagePrompt: "Select language of the document"
   yearPrompt: "Selectionnez l'année de complétion de l'EVC..."
   uploaded:   "Merci, le document sera déposé."
 
@@ -68,6 +72,7 @@ common:
   false:      "Faux"
   filename:   "Nom du fichier"
   fileSize:   "Taille du fichier"
+  language:     "Language"
   menu:       "Menu"
   submit:     "Confirmer"
   success:    "Réussit"

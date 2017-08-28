@@ -62,8 +62,9 @@ db.run('CREATE TABLE IF NOT EXISTS documents (' +
   'title TEXT, ' + //
   'year INTEGER, ' + //
   'lang TEXT, ' + //
+  'language TEXT, '  +
   'descriptionlocal TEXT, ' + //
-  'description TEXT, ' +  //
+  'descriptionen TEXT, ' +  //
   'bytes INTEGER, ' +  //
   'lat REAL, ' +  //
   'lng REAL, ' +  //
@@ -86,7 +87,7 @@ db.run('CREATE TABLE IF NOT EXISTS documents (' +
                   values = [];
               for(key in countries[i]) {
                 columns.push(key);
-                values.push(countries[i][key].replace("'","''"));
+                values.push(countries[i][key].replace(/'/g,"''"));
               }
               var query = 'INSERT INTO countries ( '+ columns.join(",") + " ) VALUES('" + values.join("','") + "')";
               db.run(query, function(err) {
@@ -121,7 +122,7 @@ var updateDocsRow = function(req, res) {
   var updates = [];
   for (key in req.body) {
     if(key !== "_method") {
-      updates.push(key + " = '" + req.body[key].replace("'","''") + "'" ) // single quotes in a string screw up the sql query
+      updates.push(key + " = '" + req.body[key].replace(/'/g,"''") + "'" ) // single quotes in a string screw up the sql query
     }
   }
   query += updates.join(", ");
@@ -265,12 +266,12 @@ var getCountries = function(req, cb) {
   });
 }
 
-var getActiveCountries = function(req, cb ) {
-  var query  = "SELECT documents.iso3, countries.iso2, countries.en, COUNT() AS count FROM documents LEFT OUTER JOIN countries ON ( documents.iso3 = countries.iso3 ) GROUP BY documents.iso3";
-  db.all(query, function(err, rows) {
-    cb(err, rows);
-  });
-}
+// var getActiveCountries = function(req, cb ) {
+//   var query  = "SELECT documents.iso3, countries.iso2, countries.en, COUNT() AS count FROM documents LEFT OUTER JOIN countries ON ( documents.iso3 = countries.iso3 ) GROUP BY documents.iso3";
+//   db.all(query, function(err, rows) {
+//     cb(err, rows);
+//   });
+// }
 
 var getCommunities = function(req, cb) {
   var query = "SELECT DISTINCT community FROM documents WHERE iso3='" + req.params.iso3 + "'" ;
@@ -575,12 +576,6 @@ api.get('/countries', function(req, res) {
   });
 });
 
-api.get('/activecountries', function(req, res) {
-  getActiveCountries(req, function(err, data) {
-    if(err) { console.log(err); }
-    res.json(data);
-  });
-});
 
 api.get('/communities/:iso3', function(req, res) {
   getCommunities(req, function(err, data) {
@@ -742,19 +737,23 @@ var upload = multer({
 app.post('/upload', upload.single('vcaFile'), function(req, res) {
   var community = "";
   if(req.body.community === "_new"){
-    community = req.body.community_new.replace("'","''");
+    community = req.body.community_new.replace(/'/g,"''");
   } else {
-    community = req.body.community;
+    community = req.body.community.replace(/'/g,"''");
   }
-  var query = "INSERT INTO documents (type, iso3, community, title, year, size, filename, description) VALUES (" +
-    "'" + req.body.type.replace("'","''") + "', " +
-    "'" + req.body.iso3.replace("'","''") + "', " +
+  var query = "INSERT INTO documents (type, iso3, country, community, title, lang, language, year, bytes, filename, descriptionlocal, descriptionen) VALUES (" +
+    "'" + req.body.type.replace(/'/g,"''") + "', " +
+    "'" + req.body.iso3.replace(/'/g,"''") + "', " +
+    "'" + req.body.country.replace(/'/g,"''") + "', " +
     "'" + community + "', " +
-    "'" + req.body.title.replace("'","''") + "', " +
-    "'" + req.body.year.replace("'","''") + "', " +
+    "'" + req.body.title.replace(/'/g,"''") + "', " +
+    "'" + req.body.lang.replace(/'/g,"''") + "', " +
+    "'" + req.body.language.replace(/'/g,"''") + "', " +
+    "'" + req.body.year.replace(/'/g,"''") + "', " +
     "'" + formatBytes(req.file.size, 1) + "', " +
-    "'" + req.file.key.replace("'","''") + "', " +
-    "'" + req.body.description.replace("'","''") + "') ";
+    "'" + req.file.key.replace(/'/g,"''") + "', " +
+    "'" + req.body.descriptionlocal.replace(/'/g,"''") + "', " +
+    "'" + req.body.descriptionen.replace(/'/g,"''") + "') ";
     // TODO: make a function to getting string values ready for inclusion in sql queries and figure that out
     console.log(query)
   db.run(query, function(err) {

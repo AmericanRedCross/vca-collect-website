@@ -45,22 +45,22 @@ settings.page = {
         url: "/fr/trouver"
       }
     }
-    // ,share: {
-    //   en: {
-    //     id: "link-share",
-    //     text: "Share",
-    //     url: "/share"
-    //   }
-    //   ,es: {
-    //     id: "link-share",
-    //     text: "Subir",
-    //     url: "/es/subir"
-    //   },fr: {
-    //     id: "link-share",
-    //     text: "Participer",
-    //     url: "/fr/participer"
-    //   }
-    // }
+    ,share: {
+      en: {
+        id: "link-share",
+        text: "Share",
+        url: "/share"
+      }
+      ,es: {
+        id: "link-share",
+        text: "Subir",
+        url: "/es/subir"
+      },fr: {
+        id: "link-share",
+        text: "Participer",
+        url: "/fr/participer"
+      }
+    }
   }
 }
 
