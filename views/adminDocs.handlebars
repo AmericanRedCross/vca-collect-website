@@ -36,6 +36,9 @@
         <textarea id="descriptionen" type="text" name="descriptionen" placeholder="..." rows= "2"></textarea>
       </label>
       <label>Country:
+        <div id="search-box">
+          <input class="typeahead" type="text" placeholder="Search for a country">
+        </div>
         <select id="iso3" name="iso3" required>
         </select>
       </label>
@@ -97,7 +100,8 @@
   </div>
 </div>
 
-
+<script src="/js/typeahead.bundle.js" charset="utf-8"></script>
+<script src="/js/handlebars-v4.0.5.js" charset="utf-8"></script>
 <script>
 
 var formatBytes = function(bytes, decimals) {
@@ -125,27 +129,26 @@ function editRow(rowid) {
     $("input[name='type']").prop('checked', false);
     var typeStr = "input[name='type'][value='" + response.type + "']";
     $(typeStr).prop('checked', true);
-    $("#lang").find('option[value=' + response.lang + ']').attr('selected','selected');
+    $("#lang").find('option[value=' + response.lang + ']').prop('selected',true);
     $("#language").val(response.language);
     $("#selectedLanguage").text(response.language);
     $("#descriptionen").val(response.descriptionen);
     $("#descriptionlocal").val(response.descriptionlocal);
     $("#country").val(response.country);
-    $("#iso3").find('option[value=' + response.iso3 + ']').attr('selected','selected');
-    $("#community").find('option[value="' + response.community + '"]').attr('selected','selected');
+    $("#iso3").find('option[value=' + response.iso3 + ']').prop('selected',true);
+    $("#community").find('option[value="' + response.community + '"]').prop('selected',true);
     $("#year").find('option').attr('selected',null);
-    $("#year").find('option[value=' + response.year + ']').attr('selected','selected');
+    $("#year").find('option[value=' + response.year + ']').prop('selected',true);
     $("#filename").find('span').text(response.filename);
     $("#size").find('span').text(formatBytes(response.bytes, 1));
     $("#lat").val(response.lat);
     $("#lng").val(response.lng);
     getCommunities(function(){
-      $("#community").find('option[value="' + response.community + '"]').attr('selected','selected');
+      $("#community").find('option[value="' + response.community + '"]').prop('selected',true);
     });
     $('#modal').foundation('open');
   });
 }
-// $("#community").find('option[value="Damissakoro, Siguiri, Kankan"]')
 
 function sizeSlider(){
   var view = $(".dataTables_scrollBody").width(); // screen window width
@@ -179,13 +182,16 @@ function getCommunities(cb){
 
 window.onload = function() {
 
-  $("#iso3").on('change', function() {
-    $("#country").val( $("#iso3").find(":selected").text() );
+  newIso = function() {
+    var countryname = $("#iso3").find(":selected").text()
+    console.log("countryname=",countryname)
+    $("#country").val( countryname );
     getCommunities(function(){
       $("#community").val('_error');
       $("#community_new").val('').prop("disabled", true);
     });
-  })
+  }
+  $("#iso3").on('change', newIso )
   $("#lang").on('change', function() {
     var languageName = $("#lang option:selected").text();
     $("#language").val(languageName);
@@ -206,11 +212,17 @@ window.onload = function() {
   $("#loading").show();
 
   $.get("/api/countries", function(data) {
+    data.sort(function(a,b) {return (a.iso3 > b.iso3) ? 1 : ((b.iso3 > a.iso3) ? -1 : 0);} );
+    var searchData = [];
     for(var i=0, len=data.length; i<len; i++) {
-      // var country = data[i]["en"];
-      var html = '<option value="' + data[i].iso3 + '">' + data[i].en + '</option>';
+      var html = '<option value="' + data[i].iso3 + '">' + data[i]["en"] + '</option>';
       $("#iso3").append(html);
+      searchData.push({
+        'name': data[i]["en"],
+        'iso3': data[i].iso3
+      })
     }
+    buildSearchBox(searchData)
   });
 
   $("#modal__close").click(function(e) {
@@ -350,6 +362,56 @@ window.onload = function() {
     })
 
   });
+
+  function buildSearchBox(data){
+    // constructs the suggestion engine
+    var countrySearch = new Bloodhound({
+      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+      queryTokenizer: Bloodhound.tokenizers.whitespace,
+      local: data,
+      sorter: function(a, b) {
+        if (a.name < b.name) {
+          return -1;
+        }
+        else if (a.name > b.name) {
+          return 1;
+        }
+        else return 0;
+
+      }
+    });
+    // kicks off the loading/processing of `local`
+    countrySearch.initialize();
+    $('#search-box .typeahead').typeahead({
+      // hint: true,
+      highlight: true,
+      minLength: 1
+    },
+    {
+      name: 'countrySearch',
+      displayKey: Handlebars.compile('\{\{name\}\}'),
+      limit: 20,
+      source: countrySearch.ttAdapter(),
+      templates: {
+        empty:[
+          '<div class="empty-message">',
+          '<i> No matching results. </i>',
+          '</div>'
+        ].join('\n'),
+        suggestion: Handlebars.compile('<p>\{\{name\}\}</p>')
+      }
+    }).on('typeahead:selected', function (eventObj, datum) {
+      selectedCountry(datum);
+    });
+  }
+
+  function selectedCountry(datum) {
+    $("#iso3").find(":selected").prop("selected", false);
+    $("#iso3").find('option[value="' + datum.iso3 + '"]').prop('selected',true);
+    newIso()
+    $('#search-box .typeahead').typeahead('val', '');
+  }
+
 }
 
 </script>
