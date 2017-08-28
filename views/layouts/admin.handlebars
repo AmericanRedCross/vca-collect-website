@@ -31,7 +31,9 @@ body {
         <li><a class="custom-navigation__link" href="/admin">Admin</a></li>
         {{#if user}}
         <li><a class="custom-navigation__link" href="{{settings.nginxlocation}}admin/documents">Documents</a></li>
+        {{#eq user.permissions "admin"}}
         <li><a class="custom-navigation__link" href="{{settings.nginxlocation}}admin/users">Users</a></li>
+        {{/eq}}
         <li>
           <form class="navbar-form" action="{{settings.nginxlocation}}logout" method="POST" >
             <button type="submit" value="submit" class="hollow button">Log Out</button>
