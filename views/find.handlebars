@@ -50,7 +50,11 @@
 var pageLanguage = "{{text.meta.language}}";
 var urlIso = window.location.search.substring(1);
 
-var map = L.map('overview_map').setView([0, 0], 2);
+var map = L.map('overview_map', {
+  scrollWheelZoom: false,
+  center: [0,0],
+  zoom: 2
+});
 L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
 	maxZoom: 19,
 	attribution: 'map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> contributors, tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>'
