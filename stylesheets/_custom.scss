@@ -232,6 +232,11 @@ body {
 // css for /admin/documents
 // ########################
 
+#table-div thead tr :first-child {
+  background-image: none !important;
+  cursor: auto !important;
+}
+
 .table-row__edit-btn {
   cursor: pointer;
   color: #6d6e70;

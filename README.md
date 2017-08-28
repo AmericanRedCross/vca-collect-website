@@ -16,6 +16,10 @@
 - login (user: me / pass: 123), create a new user, and delete the default
 - if using nginx you'll likely need to add `client_max_body_size 50M;` or whatever size value
 
+## new languages for document metadata
+- need to manually add the option to html on both `share.handlebars` and `adminDocs.handlebars`
+
+
 ### TODO
 - https://github.com/AmericanRedCross/vca-collect-website/issues/1
 - maybe use helpers to internationalize your Handlebars templates: https://formatjs.io/handlebars/

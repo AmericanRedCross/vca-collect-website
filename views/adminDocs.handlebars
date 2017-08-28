@@ -9,6 +9,16 @@
         <input id="published-true" type="radio" class="mdl-radio__button" name="published" value="1">
         <label for="published-true">True</label>
       </fieldset>
+      <label>Language
+        <select id="lang" name="lang" aria-describedby="languageHelpText" required>
+          <option selected disabled hidden style="display:none;" value="">{{text.share.languagePrompt}}</option>
+          <option value="en">English</option>
+          <option value="es">Español</option>
+          <option value="fr">Français</option>
+          <option value="pt">Português</option>
+        </select>
+      </label>
+      <input type="hidden" id="language" name="language" value="" />
       <label>Title:
         <input id="title" type="text" name="title" placeholder="..." value="null" required>
       </label>
@@ -16,24 +26,37 @@
         <fieldset>
           <input type="radio" name="type" value="VCA" id="VCA" required><label for="VCA">VCA</label>
           <input type="radio" name="type" value="POA" id="POA"><label for="POA">POA</label>
+          <input type="radio" name="type" value="VCA/POA" id="VCA/POA"><label for="VCA/POA">VCA/POA</label>
         </fieldset>
       </label>
-      <label>Description:
-        <textarea id="description" type="text" name="description" placeholder="..." rows= "3" required>null</textarea>
+      <label> Description in document language - should be <span id="selectedLanguage"></span>
+        <textarea id="descriptionlocal" type="text" name="descriptionlocal" placeholder="..." rows= "2" required></textarea>
+      </label>
+      <label id="descriptionen-input"> Description in English (if document language is not English)
+        <textarea id="descriptionen" type="text" name="descriptionen" placeholder="..." rows= "2"></textarea>
       </label>
       <label>Country:
-        <select id="country" name="iso3" required>
-          <option selected disabled hidden style="display: none" value="">Select the country...</option>
+        <select id="iso3" name="iso3" required>
         </select>
       </label>
+      <input type="hidden" id="country" name="country" value="" />
       <label>Community:
-        <input id="community" type="text" name="community" placeholder="..." value="null" required>
+        <select id="community" name="community" required>
+          <option selected disabled hidden style="display:none;" value="_error">Select a community</option>
+        </select>
+        <input id="community_new" type="text" name="community_new" placeholder="..." disabled required>
       </label>
       <label>Year:
         <select id="year" name="year" required>
           <option selected disabled hidden style="display: none" value="">Select year VCA was completed...</option>
           <option value="2017">2017</option><option value="2016">2016</option><option value="2015">2015</option><option value="2014">2014</option><option value="2013">2013</option><option value="2012">2012</option><option value="2011">2011</option><option value="2010">2010</option><option value="2009">2009</option><option value="2008">2008</option><option value="2007">2007</option><option value="2006">2006</option><option value="2005">2005</option><option value="2004">2004</option><option value="2003">2003</option><option value="2002">2002</option><option value="2001">2001</option><option value="2000">2000</option><option value="1999">1999</option><option value="1998">1998</option><option value="1997">1997</option><option value="1996">1996</option><option value="1995">1995</option><option value="1994">1994</option><option value="1993">1993</option><option value="1992">1992</option><option value="1991">1991</option><option value="1990">1990</option><option value="1989">1989</option><option value="1988">1988</option>
         </select>
+      </label>
+      <label>Latitude:
+        <input id="lat" type="number" step="any">
+      </label>
+      <label>Longtitude:
+        <input id="lng" type="number" step="any">
       </label>
       <div id="filename">File name: <span></span></div>
       <div id="size">File size: <span></span></div>
@@ -77,6 +100,16 @@
 
 <script>
 
+var formatBytes = function(bytes, decimals) {
+   if(bytes == 0) return '0 Bytes';
+   var k = 1000,
+       dm = decimals + 1 || 3,
+       sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+       i = Math.floor(Math.log(bytes) / Math.log(k));
+   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
+
+
 function editRow(rowid) {
   $.get('/api/documents/' + rowid, function(response) {
     var action = $("#documentform").attr("action").replace(":rowid", rowid);
@@ -92,18 +125,27 @@ function editRow(rowid) {
     $("input[name='type']").prop('checked', false);
     var typeStr = "input[name='type'][value='" + response.type + "']";
     $(typeStr).prop('checked', true);
-    $("#description").val(response.description);
-    $("#country").find('option').attr('selected',null);
-    $("#country").find('option[value=' + response.iso3 + ']').attr('selected','selected');
-    $("#community").val(response.community);
+    $("#lang").find('option[value=' + response.lang + ']').attr('selected','selected');
+    $("#language").val(response.language);
+    $("#selectedLanguage").text(response.language);
+    $("#descriptionen").val(response.descriptionen);
+    $("#descriptionlocal").val(response.descriptionlocal);
+    $("#country").val(response.country);
+    $("#iso3").find('option[value=' + response.iso3 + ']').attr('selected','selected');
+    $("#community").find('option[value="' + response.community + '"]').attr('selected','selected');
     $("#year").find('option').attr('selected',null);
     $("#year").find('option[value=' + response.year + ']').attr('selected','selected');
     $("#filename").find('span').text(response.filename);
-    $("#size").find('span').text(response.size);
-
+    $("#size").find('span').text(formatBytes(response.bytes, 1));
+    $("#lat").val(response.lat);
+    $("#lng").val(response.lng);
+    getCommunities(function(){
+      $("#community").find('option[value="' + response.community + '"]').attr('selected','selected');
+    });
     $('#modal').foundation('open');
   });
 }
+// $("#community").find('option[value="Damissakoro, Siguiri, Kankan"]')
 
 function sizeSlider(){
   var view = $(".dataTables_scrollBody").width(); // screen window width
@@ -121,7 +163,41 @@ function sizeSlider(){
   });
 }
 
+function getCommunities(cb){
+  $("#community").find(".community_options").remove();
+  var url = "/api/communities/" + $("#iso3").find(":selected").val();
+  console.log(url)
+  $.get(url, function(data) {
+    for(var i=0, len=data.length; i<len; i++) {
+      var html = '<option class="community_options" value="' + data[i].community + '">' + data[i].community + '</option>';
+      $("#community").append(html);
+    }
+    $("#community").append('<option class="community_options" value="_new">Add a new community</option>');
+    if(cb){ cb() };
+  });
+}
+
 window.onload = function() {
+
+  $("#iso3").on('change', function() {
+    $("#country").val( $("#iso3").find(":selected").text() );
+    getCommunities(function(){
+      $("#community").val('_error');
+      $("#community_new").val('').prop("disabled", true);
+    });
+  })
+  $("#lang").on('change', function() {
+    var languageName = $("#lang option:selected").text();
+    $("#language").val(languageName);
+    $("#selectedLanguage").text(languageName);
+  })
+  $("#community").on('change', function() {
+    if($("#community").val() === '_new'){
+      $("#community_new").prop("disabled", false);
+    } else {
+      $("#community_new").val('').prop("disabled", true);
+    }
+  })
 
   resize = $(window).resize(function() {
     sizeSlider();
@@ -133,7 +209,7 @@ window.onload = function() {
     for(var i=0, len=data.length; i<len; i++) {
       // var country = data[i]["en"];
       var html = '<option value="' + data[i].iso3 + '">' + data[i].en + '</option>';
-      $("#country").append(html);
+      $("#iso3").append(html);
     }
   });
 
@@ -148,7 +224,16 @@ window.onload = function() {
   );
 
   $.get('/api/documents', function(response) {
-    console.log(response)
+    for(var i = 0; i < response.length; i++){
+      var trimfields = ["community", "title", "descriptionlocal", "descriptionen", "comments"];
+      trimfields.forEach(function(d){
+          if(response[i][d].length > 20){
+            response[i][d] = response[i][d].substring(0, 20);
+            response[i][d] += "...";
+          }
+      })
+    }
+
     $("#table-div").empty();
     if(response.length === 0) {
       $("#loading").hide();

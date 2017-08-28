@@ -209,7 +209,6 @@ var updateDocs = function(iso){
     .attr('class', 'column')
     .style('opacity', 1e-6)
     .html(function(d) {
-      console.log(d)
         var download = "";
         if(d.published == 1) {
           var extension = d.filename.substr(d.filename.lastIndexOf('.'));
