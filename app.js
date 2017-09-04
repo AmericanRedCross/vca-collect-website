@@ -750,7 +750,7 @@ app.post('/upload', upload.single('vcaFile'), function(req, res) {
     "'" + req.body.lang.replace(/'/g,"''") + "', " +
     "'" + req.body.language.replace(/'/g,"''") + "', " +
     "'" + req.body.year.replace(/'/g,"''") + "', " +
-    "'" + formatBytes(req.file.size, 1) + "', " +
+    "'" + req.file.size + "', " +
     "'" + req.file.key.replace(/'/g,"''") + "', " +
     "'" + req.body.descriptionlocal.replace(/'/g,"''") + "', " +
     "'" + req.body.descriptionen.replace(/'/g,"''") + "') ";
