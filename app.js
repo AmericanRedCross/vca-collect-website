@@ -741,7 +741,7 @@ app.post('/upload', upload.single('vcaFile'), function(req, res) {
   } else {
     community = req.body.community.replace(/'/g,"''");
   }
-  var query = "INSERT INTO documents (type, iso3, country, community, title, lang, language, year, bytes, filename, descriptionlocal, descriptionen) VALUES (" +
+  var query = "INSERT INTO documents (type, iso3, country, community, title, lang, language, year, bytes, filename, descriptionlocal, descriptionen, lat, lng, comments) VALUES (" +
     "'" + req.body.type.replace(/'/g,"''") + "', " +
     "'" + req.body.iso3.replace(/'/g,"''") + "', " +
     "'" + req.body.country.replace(/'/g,"''") + "', " +
@@ -753,7 +753,11 @@ app.post('/upload', upload.single('vcaFile'), function(req, res) {
     "'" + req.file.size + "', " +
     "'" + req.file.key.replace(/'/g,"''") + "', " +
     "'" + req.body.descriptionlocal.replace(/'/g,"''") + "', " +
-    "'" + req.body.descriptionen.replace(/'/g,"''") + "') ";
+    "'" + req.body.descriptionen.replace(/'/g,"''") +
+    "'" + req.body.comments.replace(/'/g,"''") +
+    "'" + req.body.lat +
+    "'" + req.body.lng +
+    "') ";
     // TODO: make a function to getting string values ready for inclusion in sql queries and figure that out
     console.log(query)
   db.run(query, function(err) {

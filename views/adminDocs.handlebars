@@ -61,6 +61,9 @@
       <label>Longtitude:
         <input id="lng" type="number" step="any">
       </label>
+      <label> Comments
+        <textarea id="comments" type="text" name="comments" placeholder="..." rows= "3"></textarea>
+      </label>
       <div id="filename">File name: <span></span></div>
       <div id="size">File size: <span></span></div>
       <button type="submit" value="submit" class="button primary form-actions__submit">
@@ -143,6 +146,7 @@ function editRow(rowid) {
     $("#size").find('span').text(formatBytes(response.bytes, 1));
     $("#lat").val(response.lat);
     $("#lng").val(response.lng);
+    $("#comments").val(response.comments);
     getCommunities(function(){
       $("#community").find('option[value="' + response.community + '"]').prop('selected',true);
     });
