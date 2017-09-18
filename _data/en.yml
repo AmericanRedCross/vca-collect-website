@@ -74,6 +74,8 @@ common:
   filename:     "File name"
   fileSize:     "File size"
   language:     "Language"
+  latitude:     "Latitude"
+  longitude:    "Longitude"
   menu:         "Menu"
   submit:       "Submit"
   success:      "Success"
