@@ -6,6 +6,8 @@ meta:
   siteName:   "Référentiel ECV"
   language:   "fr"
 
+iewarning:    "Your browser is out of date and not supported by this website. Please get the latest version of a major browser."
+
 about:
   movement:   "Mouvement International de la Croix-Rouge et du Croissant-Rouge"
   mainheader: "Évaluation des capacités et de la vulnérabilité (ECV)"
@@ -38,7 +40,9 @@ find:
   about:      "About this page."
   global:     "Global"
   select:     "Click a country to filter."
-
+  mapped:     "documents mapped."
+  total:      "total documents."
+  scroll:     "Scroll down for all documents."
 
 share:
   sharePrompt: "Télécharger"

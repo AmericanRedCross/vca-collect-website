@@ -10,7 +10,7 @@
       <span> {{text.find.global}} </span> &nbsp; <small class="subheader"> {{text.find.select}} </small>
     </h4>
 
-    <p><small>Documents without identified locations will not appear on the map. X of Z geo-coded documents displayed.</small></p>
+    <p><small><span id="mapped-docs">?</span> {{text.find.mapped}} <span id="total-docs">?</span> {{text.find.total}} {{text.find.scroll}}</small></p>
   </div>
 </div>
 <div class="row">
@@ -55,9 +55,12 @@ var map = L.map('overview_map', {
   center: [0,0],
   zoom: 2
 });
-L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}.{ext}', {
 	maxZoom: 19,
-	attribution: 'map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> contributors, tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>'
+  attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> | Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  subdomains: 'abcd',
+  minZoom: 0,
+  ext: 'png'
 }).addTo(map);
 
 var markers = L.markerClusterGroup({
@@ -182,22 +185,26 @@ var centroidOptions = {
 
 var updateDocs = function(iso){
   markers.clearLayers()
+  var mapped = 0;
   for (var i = 0; i < docs.length; i++) {
     // does this test work? whats a better test for a valid latlng?
     if( parseFloat(docs[i].lat) < 90 && parseFloat(docs[i].lat) > -90 && parseFloat(docs[i].lng) < 180 && parseFloat(docs[i].lng) > -180 ) {
       var marker = L.circleMarker(new L.LatLng(parseFloat(docs[i].lat), parseFloat(docs[i].lng)), centroidOptions);
 
       if(iso){
-          if(docs[i].iso3 === iso) { markers.addLayer(marker); }
+          if(docs[i].iso3 === iso) { mapped++; markers.addLayer(marker); }
       } else {
+        mapped++;
         markers.addLayer(marker);
       }
     }
   }
+  $("#mapped-docs").text(mapped);
 
   var filteredDocs = docs.filter(function(d) {
     if(iso) { return d.iso3 == iso } else { return true }
   });
+  $("#total-docs").text(filteredDocs.length);
 
   var documentCards = d3.select('#documents-cards').selectAll('div.column').data(filteredDocs, function(d) { return d.rowid; });
 
@@ -216,10 +223,13 @@ var updateDocs = function(iso){
         }
         var html = '<div class="card" data-equalizer-watch>' +
         '<div class="card-section">' +
-        '<h6><i class="fa fa-fw fa-map-marker subheader" aria-hidden="true"></i> ' + d.community + '<br><span class=""><i class="fa fa-fw fa-file-text-o subheader" aria-hidden="true"></i> ' + d.title + '</span></h6>' +
-        '<p><small>' + d.type + ', ' + d.year + '<br>' +
-        d.descriptionlocal + '</br>' +
-        '</small>' + download + '</p>' +
+        '<h6><i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> ' + d.community + '<br><span class=""><i class="fa fa-fw fa-file-text-o" aria-hidden="true"></i> ' + d.title + '</span></h6>' +
+        '<p><small><b>' + d.type + ', ' + d.year + '</b> - ' +
+        '' + d.descriptionlocal + '</p>';
+        if(d.descriptionen.length > 0) {
+          html+= '<p><i>' + d.descriptionen + '</i></p>';
+        }
+        html += '</small></p><p>' + download + '</p>' +
         '</div>' +
         '</div>';
         return html;

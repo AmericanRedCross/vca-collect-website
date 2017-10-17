@@ -6,6 +6,8 @@ meta:
   siteName:      "Repositorio AVC"
   language:      "es"
 
+iewarning:    "Your browser is out of date and not supported by this website. Please get the latest version of a major browser."
+
 about:
   movement:   "Movimiento Internacional de la Cruz Roja y de la Media Luna Roja"
   mainheader: "Análisis de Vulnerabilidad y Capacidad (AVC)"
@@ -38,6 +40,9 @@ find:
   about:      "About this page."
   global:     "Global"
   select:     "Click a country to filter."
+  mapped:     "documents mapped."
+  total:      "total documents."
+  scroll:     "Scroll down for all documents."
 
 share:
   sharePrompt:    "Subir"

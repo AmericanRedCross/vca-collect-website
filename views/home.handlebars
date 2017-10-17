@@ -162,16 +162,19 @@ function drawMap() {
     .attr("class", "country country__default")
     .attr("d", path)
     .on("mouseover", function(d){
-      populateMapTooltip(d, this);
-      d3.select(this).moveToFront();
-      d3.select(this).classed("country__focus", true);
+      if(d3.select(this).classed("country__focus") === false){
+        d3.selectAll(".country__focus").classed("country__focus", false);
+        populateMapTooltip(d, this);
+        d3.select(this).moveToFront();
+        d3.select(this).classed("country__focus", true);
+      }
     })
     .on("mouseout", function(d){
       d3.select(this).classed("country__focus", false);
-      $('#tooltip').empty();
+      $('#tooltip').html('');
     })
     .on('click', function(d){
-      console.log
+      console.log("click")
       var findUrl = $("#link-find").attr("href");
       findUrl += "?" + d.properties.iso;
       window.location.href = findUrl;
@@ -204,7 +207,7 @@ function populateMapTooltip(d, el){
   // tooltipText += (poa>1) ? 's</small>' : '</small>';
   // tooltipText += poa ? '<small> ' + poa + ' POA' : '';
   // tooltipText += (poa>1) ? 's</small>' : '</small>';
-  $('#tooltip').append(tooltipText);
+  $('#tooltip').html(tooltipText);
 }
 
 window.onload = function() {
