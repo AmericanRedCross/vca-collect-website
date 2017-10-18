@@ -262,15 +262,18 @@ var buildPage = function(error, geo, data) {
     .attr("class", "find-country")
     .attr("d", path)
     .on("mouseover", function(d){
-      d3.select(this).moveToFront();
-      d3.select(this).classed("find-country__focus", true);
+      if(d3.select(this).classed("find-country__focus") === false){
+        d3.selectAll(".find-country__focus").classed("find-country__focus", false);
+        d3.select(this).moveToFront();
+        d3.select(this).classed("find-country__focus", true);
+      }
     })
     .on("mouseout", function(d){
       d3.select(this).classed("find-country__focus", false);
       d3.select(".find-country__active").moveToFront();
-      $('#tooltip').empty();
+      $('#tooltip').html('');
     })
-    .on('click', function(d){
+    .on("click", function(d){
       var findUrl = $("#link-find").attr("href");
       findUrl += "?" + d.properties.iso;
       window.history.pushState(null, '', findUrl);
