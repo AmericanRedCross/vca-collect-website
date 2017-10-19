@@ -190,7 +190,12 @@ var updateDocs = function(iso){
     // does this test work? whats a better test for a valid latlng?
     if( parseFloat(docs[i].lat) < 90 && parseFloat(docs[i].lat) > -90 && parseFloat(docs[i].lng) < 180 && parseFloat(docs[i].lng) > -180 ) {
       var marker = L.circleMarker(new L.LatLng(parseFloat(docs[i].lat), parseFloat(docs[i].lng)), centroidOptions);
-
+      var download = "";
+      if(docs[i].published == 1) {
+        var extension = docs[i].filename.substr(docs[i].filename.lastIndexOf('.'));
+        download = '<br><a href="/api/file/' + docs[i].rowid + '" download>' + typeIcon(extension) + ' ' + formatBytes(docs[i].bytes, 1) + '</a><br>';
+      }
+      marker.bindPopup(docs[i].title + " " + download)
       if(iso){
           if(docs[i].iso3 === iso) { mapped++; markers.addLayer(marker); }
       } else {
