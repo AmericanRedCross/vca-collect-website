@@ -6,7 +6,7 @@ meta:
   siteName:   "Référentiel ECV"
   language:   "fr"
 
-iewarning:    "Your browser is out of date and not supported by this website. Please get the latest version of a major browser."
+iewarning:    "Votre navigateur est obsolète et n'est pas supporté par ce site. Veuillez télécharger la version la plus récente de votre navigateur."
 
 about:
   movement:   "Mouvement International de la Croix-Rouge et du Croissant-Rouge"
@@ -39,10 +39,10 @@ find:
   header:     "Trouver"
   about:      "About this page."
   global:     "Global"
-  select:     "Click a country to filter."
-  mapped:     "documents mapped."
-  total:      "total documents."
-  scroll:     "Scroll down for all documents."
+  select:     "Cliquez pour filtrer par pays."
+  mapped:     "documents cartographiés."
+  total:      "documents enregistrés."
+  scroll:     "Déplacez votre souris vers le bas pour afficher les documents."
 
 share:
   sharePrompt: "Télécharger"
@@ -54,10 +54,10 @@ share:
   countryPrompt: "Sélectionnez un pays..."
   commPrompt: "Sélectionnez une communité..."
   commAdd:    "Ajoutez une nouvelle communité"
-  descripEn:  "Provide a description of the document in English (optional)"
+  descripEn:  "Veuillez fournir une description du document en anglais (facultatif)"
   descripLocal: "Fournir une description du document en "
-  languageHelp: "Please email if the document language is not available in the dropdown menu: "
-  languagePrompt: "Select language of the document"
+  languageHelp: "Veuillez faire parvenir un e-mail si la langue du document n’est pas disponibles dans le menu déroulant: "
+  languagePrompt: "Sélectionnez la langue du document"
   yearPrompt: "Selectionnez l'année de complétion de l'EVC..."
   uploaded:   "Merci, le document sera déposé."
 

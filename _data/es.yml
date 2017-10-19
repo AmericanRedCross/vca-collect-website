@@ -6,7 +6,7 @@ meta:
   siteName:      "Repositorio AVC"
   language:      "es"
 
-iewarning:    "Your browser is out of date and not supported by this website. Please get the latest version of a major browser."
+iewarning:    "Su navegador está obsoleto y no es apto para soportar esta página web. Por favor descargue una versión más reciente de un navegador."
 
 about:
   movement:   "Movimiento Internacional de la Cruz Roja y de la Media Luna Roja"
@@ -39,10 +39,10 @@ find:
   header:     "Buscar"
   about:      "About this page."
   global:     "Global"
-  select:     "Click a country to filter."
-  mapped:     "documents mapped."
-  total:      "total documents."
-  scroll:     "Scroll down for all documents."
+  select:     "Haga clic para filtrar por país."
+  mapped:     "documentos localizados en el mapa."
+  total:      "documentos en total."
+  scroll:     "Desplácese hacia abajo para ver todos los documentos."
 
 share:
   sharePrompt:    "Subir"
@@ -54,10 +54,10 @@ share:
   countryPrompt:  "Seleccione un país..."
   commPrompt:     "Seleccione una comunidad..."
   commAdd:        "Añadir una nueva comunidad"
-  descripEn:  "Provide a description of the document in English (optional)"
+  descripEn:      "Proporcione una descripción del documento en inglés (opcional)"
   descripLocal: "Proporcione una descripción del documento en "
-  languageHelp: "Please email if the document language is not available in the dropdown menu: "
-  languagePrompt: "Select language of the document"
+  languageHelp:   "Por favor, envíe un correo electrónico si el idioma del documento no está disponible en el menú desplegable: "
+  languagePrompt: "Seleccione el idioma del documento"
   yearPrompt:     "Seleccione el año en que se completó el AVC..."
   uploaded:       "Gracias, el documento debe ser presentado."
 
