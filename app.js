@@ -753,9 +753,9 @@ app.post('/upload', upload.single('vcaFile'), function(req, res) {
     "'" + req.file.size + "', " +
     "'" + req.file.key.replace(/'/g,"''") + "', " +
     "'" + req.body.descriptionlocal.replace(/'/g,"''") + "', " +
-    "'" + req.body.descriptionen.replace(/'/g,"''") +
-    "'" + req.body.comments.replace(/'/g,"''") +
-    "'" + req.body.lat +
+    "'" + req.body.descriptionen.replace(/'/g,"''") + "', " +
+    "'" + req.body.comments.replace(/'/g,"''") + "', " +
+    "'" + req.body.lat + "', " +
     "'" + req.body.lng +
     "') ";
     // TODO: make a function to getting string values ready for inclusion in sql queries and figure that out
