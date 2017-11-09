@@ -78,8 +78,24 @@
       </label>
 
       <input type="hidden" id="comments" name="comments" value="" />
-      <input type="hidden" id="lat" name="lat" value="" />
-      <input type="hidden" id="lng" name="lng" value="" />
+
+      <label>{{text.share.geoLocate}} <br>
+        <small>{{text.share.geoDirections}}</small> <br>
+        <input id="lat" name="lat" value="" readonly />
+        <input id="lng" name="lng" value="" readonly />
+        <span id="zoomToMarker" class="clickable geo-result"><small><i class="fa fa-search" aria-hidden="true"></i> {{text.share.geoZoomTo}}</small></span>
+
+        <div id="geolocate_map"></div>
+
+        <div class="input-group" style="margin: 0.5em 0">
+          <div class="input-group-button">
+            <input id="geo-search" type="button" class="" value="{{text.common.search}}">
+          </div>
+          <input id="geo-term" class="input-group-field" type="text" placeholder="{{text.share.geoPrompt}}">
+        </div>
+        <span id="geo-noresults">{{text.share.geoNone}}</span>
+        <div id="geo-results"> <!-- ... --> </div>
+      </label>
 
       <div id="submitErrorMessage" class="callout warning hidden" data-closable>
         <span><strong>{{text.common.allFieldsErr }} </strong></span>
@@ -97,10 +113,57 @@
 <br>
 <br>
 
+<style>
+
+</style>
+
 
 
 <script src="/js/typeahead.bundle.js" charset="utf-8"></script>
 <script src="/js/handlebars-v4.0.5.js" charset="utf-8"></script>
+
+
+<script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
+
+<!-- <link rel="stylesheet" href="/css/leaflet.draw.css"/>
+<script src="/leaflet-draw/Leaflet.draw.js" charset="utf-8"></script>
+<script src="/leaflet-draw/Leaflet.Draw.Event.js" charset="utf-8"></script>
+<script src="/leaflet-draw/Toolbar.js"></script>
+<script src="/leaflet-draw/Tooltip.js"></script> -->
+
+<!-- <script src="/leaflet-draw/ext/GeometryUtil.js"></script>
+<script src="/leaflet-draw/ext/LatLngUtil.js"></script>
+<script src="/leaflet-draw/ext/LineUtil.Intersect.js"></script>
+<script src="/leaflet-draw/ext/Polygon.Intersect.js"></script>
+<script src="/leaflet-draw/ext/Polyline.Intersect.js"></script>
+<script src="/leaflet-draw/ext/TouchEvents.js"></script>
+
+<script src="/leaflet-draw/draw/DrawToolbar.js"></script>
+<script src="/leaflet-draw/draw/handler/Draw.Feature.js"></script>
+<script src="/leaflet-draw/draw/handler/Draw.SimpleShape.js"></script>
+<script src="/leaflet-draw/draw/handler/Draw.Polyline.js"></script>
+<script src="/leaflet-draw/draw/handler/Draw.Marker.js"></script>
+<script src="/leaflet-draw/draw/handler/Draw.Circle.js"></script>
+<script src="/leaflet-draw/draw/handler/Draw.CircleMarker.js"></script>
+<script src="/leaflet-draw/draw/handler/Draw.Polygon.js"></script>
+<script src="/leaflet-draw/draw/handler/Draw.Rectangle.js"></script>
+
+
+<script src="/leaflet-draw/edit/EditToolbar.js"></script>
+<script src="/leaflet-draw/edit/handler/EditToolbar.Edit.js"></script>
+<script src="/leaflet-draw/edit/handler/EditToolbar.Delete.js"></script>
+
+<script src="/leaflet-draw/Control.Draw.js"></script>
+
+<script src="/leaflet-draw/edit/handler/Edit.Poly.js"></script>
+<script src="/leaflet-draw/edit/handler/Edit.SimpleShape.js"></script>
+<script src="/leaflet-draw/edit/handler/Edit.Rectangle.js"></script>
+<script src="/leaflet-draw/edit/handler/Edit.Marker.js"></script>
+<script src="/leaflet-draw/edit/handler/Edit.CircleMarker.js"></script>
+<script src="/leaflet-draw/edit/handler/Edit.Circle.js"></script> -->
 
 <script>
 
@@ -110,6 +173,96 @@ window.onload = function() {
 
   // if the page loads with it hidden it won't spin when shown
   $(".form-actions__spinner").hide();
+  $("#geo-noresults").hide();
+
+  var map = L.map('geolocate_map').setView([0, 0], 2);
+  L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  var drawnItems = new L.FeatureGroup();
+  map.addLayer(drawnItems);
+  var drawControl = new L.Control.Draw({
+    draw: {
+      circle: false,
+      circlemarker: false,
+      polygon: false,
+      polyline: false,
+      rectangle: false
+     },
+      edit: {
+          featureGroup: drawnItems
+      }
+  });
+  map.addControl(drawControl);
+  map.on(L.Draw.Event.CREATED, function (event) {
+    var layer = event.layer;
+    drawnItems.clearLayers();
+    $("#lat").val(layer._latlng.lat);
+    $("#lng").val(layer._latlng.lng);
+    drawnItems.addLayer(layer);
+  });
+
+  map.on('draw:edited', function (e) {
+    var layers = e.layers;
+    layers.eachLayer(function (layer) {
+      $("#lat").val(layer._latlng.lat);
+      $("#lng").val(layer._latlng.lng);
+    });
+  });
+
+  map.on('draw:deleted', function (e) {
+    $("#lat").val('');
+    $("#lng").val('');
+  });
+
+
+
+  // prevent ENTER from submitting the share form and instead submit the search
+  $('#geo-term').keypress(function(event){
+    if(event.keyCode == 13){
+      event.preventDefault();
+      $('#geo-search').click();
+    }
+  });
+
+  geoClick = function(element){
+    var lat = $(element).data('lat');
+    var lng = $(element).data('lng');
+    map.flyTo({lat: lat, lng: lng}, 14);
+    $("#lat").val(lat);
+    $("#lng").val(lng);
+    drawnItems.clearLayers();
+    drawnItems.addLayer(L.marker({lat: lat, lng: lng}));
+  }
+
+  $("#zoomToMarker").on('click', function() {
+    if($("#lat").val().length !== 0){
+      map.flyTo({lat: $("#lat").val(), lng: $("#lng").val()}, 14)
+    }
+  })
+
+  $("#geo-search").on('click', function() {
+    var searchTerm = $("#geo-term").val()
+    var nominatim = "https://nominatim.openstreetmap.org/search/" + encodeURI(searchTerm) + "?format=json"
+    $.getJSON(nominatim, function(response){
+      $("#geo-results").html('');
+      if(response.length == 0) {
+        $("#geo-noresults").show();
+      } else {
+        $("#geo-noresults").hide();
+        $.each(response, function(index, value){
+          var html = "<div class='clickable geo-result' onClick='geoClick(this);' data-lat='" + value.lat + "' data-lng='" + value.lon + "' >"+
+            "<i class='fa fa-map-marker' aria-hidden='true'></i> " +
+            value.display_name +
+            "</div>";
+          $("#geo-results").append(html)
+        });
+      }
+    });
+  });
+
+
 
   $("#vcaFile").on('change', function() {
     $("#selectedFile").text(this.files[0].name);
@@ -189,6 +342,9 @@ window.onload = function() {
     $("#selectedFile").empty();
     $(".form-actions__spinner").hide();
     $(".form-actions__submit").removeClass("disabled");
+    $("#lat").val('');
+    $("#lng").val('');
+    drawnItems.clearLayers();
     $("#submitErrorMessage").hide();
     $("html, body").animate({ scrollTop: 0 }, "slow");
   }

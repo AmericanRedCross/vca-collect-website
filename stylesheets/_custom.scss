@@ -91,6 +91,20 @@ body {
     color: $deep-red;
 }
 
+// css for _includes/share.html
+// ###############################
+.clickable {
+  cursor: pointer;
+}
+.clickable.geo-result:hover {
+  color: #2f4f4f;
+}
+
+#geolocate_map {
+  height: 450px;
+  width: 100%;
+}
+
 // css for _includes/find.html
 // ###############################
 #find-loader {

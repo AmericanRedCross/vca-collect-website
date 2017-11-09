@@ -741,7 +741,7 @@ app.post('/upload', upload.single('vcaFile'), function(req, res) {
   } else {
     community = req.body.community.replace(/'/g,"''");
   }
-  var query = "INSERT INTO documents (type, iso3, country, community, title, lang, language, year, bytes, filename, descriptionlocal, descriptionen, lat, lng, comments) VALUES (" +
+  var query = "INSERT INTO documents (type, iso3, country, community, title, lang, language, year, bytes, filename, descriptionlocal, descriptionen, comments, lat, lng) VALUES (" +
     "'" + req.body.type.replace(/'/g,"''") + "', " +
     "'" + req.body.iso3.replace(/'/g,"''") + "', " +
     "'" + req.body.country.replace(/'/g,"''") + "', " +
