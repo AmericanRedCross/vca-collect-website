@@ -56,7 +56,7 @@ share:
   commAdd:    "Add a new community"
   descripEn:  "Provide a description of the document in English (optional)"
   descripLocal: "Provide a description of the document in "
-  geoDirections: "Use the marker, edit, and delete icons in the left toolbar."
+  geoDirections: "Use the \"marker\", \"edit\", and \"delete\" icons in the left toolbar."
   geoLocate:  "Provide a location for the community"
   geoPrompt: "Search for a place..."
   geoZoomTo: "Zoom to"
