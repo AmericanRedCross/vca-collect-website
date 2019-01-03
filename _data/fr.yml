@@ -15,25 +15,12 @@ about:
   text1a:     "Cette plate-forme a été développée par l’IFRC et le Centre Global de préparation aux catastrophes afin de faciliter la collecte et l’utilisation des rapports de l'EVC et des Plans d’action de la Croix-Rouge et du Croissant-Rouge. Le site permet aux utilisateurs de trouver, de télécharger et d'accéder aux rapports et Plans d'action de l'EVC qui ont été rédigés par les communautés et les sociétés nationales avec la participation de différents partenaires dans le monde entier."
   text1b:     "Ce site sert de plateforme aux Sociétés nationales et à leurs communautés pour recueillir et consolider leur rapports d'EVC et leurs Plans d'action. Il permet de fournir des renseignements pertinents sur les EVC existant et servira de référence pour les furfures EVC. Cette plateforme souligne   l’impact et l'utilité collective de la méthodologie et indique également les manques existants dans son utilisation dans les différentes communautés. Cela permet aux Sociétés nationales de constituer un référentiel pour leur travail et d'avoir accès à des informations pertinentes afin de surveiller à plus long terme les risques et les vulnérabilités, ou encore à des fins d'appréciation des situations en cas d'urgence."
   header2:    "À propos de l’évaluation de la vulnérabilité et des capacités (EVC)"
+  webText:    "Le site de l’Evaluation de la vulnérabilité et des capacités, FICR"
+  ifrcUrl:    "https://www.ifrcvca.org/"
   text2a:     "l’Evaluation de la vulnérabilité et des capacités (EVC)  est un processus développé pour accompagner les communautés dans leur cheminement vers la résilience en identifiant et évaluant leurs besoins prioritaires. L'EVC fournit les outils nécessaires pour les évaluations dirigées par la communauté et les processus de recherche de solutions qui intègrent l'information sur les risques, les vulnérabilités et les capacités existants. Les EVC constituent la base d'une programmation communautaire réussie."
   text2b:     "L'EVC permet aux Sociétés nationales de Croix-Rouge et du Croissant-Rouge de contextualiser chaque étape du cycle de programmation, afin d'assurer que celui-ci est bien axé sur les communautés. Par ce processus, l'EVC contribue à la responsabilisation des communautés en encourageant la prise de conscience des risques et en les incitant à s'approprier les mécanismes d'identification et de développement des solutions pour améliorer leur résilience."
   text2c:     "Pour soutenir le mandat principal du FICR qui est de servir les plus vulnérables, le premier guide d'EVC est créé en 1999 à la demande des Sociétés nationales. La même année, il est approuvé par l’Assemblée générale. De 2005 à 2008, quatre guides d' EVC ont été élaborés pour soutenir le travail des Sociétés nationales avec les communautés. En 2011, un examen global de l'EVC a mené à l’élaboration d’un guide sur la manière d’intégrer le changement climatique et les risques urbains."
   text2d:     "Depuis sa création, l'EVC a été utilisée avec succès par la FICR et de nombreux partenaires externes dans le monde entier. C’est un processus vital, participatif et communautaire qui contribue aux efforts de la FICR et des membres des Sociétés nationales dans leur travail avec les communautés locales. Il permet de définir les besoins et élaborer des solutions pour réduire la vulnérabilité et renforcer la résilience des communautés."
-  text2e: "Le site de l’Evaluation de la vulnérabilité et des capacités, FICR"
-  ifrcUrl: http://www.ifrc.org/vca
-
-resources:
-  resources:  "Ressources"
-  guidelines: "Les principes de l’Evaluation de la vulnérabilité et des capacités (EVC)"
-  guidelines-url: "http://www.ifrc.org/Global/Publications/disasters/vca/Vca_en.pdf"
-  whatIs: "Qu'est-ce que l' EVC"
-  whatIs-url: "http://www.ifrc.org/Global/Publications/disasters/vca/whats-vca-en.pdf"
-  howTo: "Comment réaliser une EVC"
-  howTo-url: "http://www.ifrc.org/Global/Publications/disasters/vca/how-to-do-vca-en.pdf"
-  trainingGuide:  "Le guide de formation à l' EVC"
-  trainingGuide-url: "http://www.ifrc.org/Global/Publications/disasters/vca/vca-training-guide-en.pdf"
-  toolbox:  "La boîte à outils EVC"
-  toolbox-url:  "http://www.ifrc.org/Global/Publications/disasters/vca/vca-toolbox-en.pdf"
 
 find:
   header:     "Trouver"

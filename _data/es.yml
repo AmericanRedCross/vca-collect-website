@@ -15,25 +15,12 @@ about:
   text1a:     "Esta plataforma ha sido desarrollada por la FICR junto con el Centro Mundial de Preparación para Desastres para facilitar la recopilación y uso de los informes y planes de acción del AVC del Movimiento de la Cruz Roja Media Luna Roja. El sitio permite a los usuarios cargar, buscar y acceder a los informes y planes de acción de AVC que fueron llevados a cabo por las comunidades con las Sociedades Nacionales y otros socios en todo el mundo."
   text1b:     "Este sitio sirve como plataforma para las Sociedades Nacionales y a sus comunidades para recopilar y consolidar los informes y Planes de Acción del AVC como información y referencia futura, destacando el uso colectivo y el impacto de la metodología e indicando las áreas de separación en su uso en diferentes comunidades. Esto permite a las Sociedades Nacionales tener un repositorio histórico de su trabajo y acceder a la información relevante para el monitoreo a largo plazo de los riesgos y vulnerabilidades o para la concientización de la situación en cualquier caso de emergencia."
   header2:    "Acerca del Análisis de Vulnerabilidad y Capacidad (AVC)"
+  webText:     "Lugar de Evaluación de la Vulnerabilidad y Capacidad de la FICR"
+  ifrcUrl:    "https://www.ifrcvca.org/"
   text2a:     "El Análisis de Vulnerabilidad y Capacidad (AVC) es un proceso diseñado para acompañar a las comunidades a ser más resistentes a través de la identificación y evaluación de sus necesidades prioritarias. El AVC proporciona un conjunto de herramientas para las evaluaciones dirigidas a la comunidad y los procesos de búsqueda de soluciones que integran información sobre los riesgos, vulnerabilidades y capacidades existentes y forman la base para una programación comunitaria exitosa."
   text2b:     "El VCA permite a las Sociedades Nacionales de la Cruz Roja y de la Media Luna Roja contextualizar cada paso del ciclo de programación para asegurar que se centre en las comunidades. A través de este proceso, los AVC ayudan a potenciar a las comunidades manteniéndolas informadas sobre riesgos y desarrollando una apropiación de la identificación y desarrollo de soluciones para aumentar la resiliencia."
   text2c:     "La primera guía de AVC fue creada en 1999 a petición de las Sociedades Nacionales y apoya el mandato central de la FICR de atender a los más vulnerables. Fue aprobado en 1999 por la Asamblea General. Del 2005 al 2008, se elaboraron cuatro guías de AVC para apoyar el trabajo de las Sociedades Nacionales con las comunidades. En 2011, una revisión global del AVC condujo al desarrollo de una guía sobre cómo integrar el cambio climático y el riesgo urbano."
   text2d:     "Desde su creación, el AVC ha sido utilizado con éxito en todo el mundo por la FICR y numerosos socios externos. Es un proceso vital, participativo e impulsado a la comunidad que contribuye a los esfuerzos continuos de la FICR y de las Sociedades Nacionales miembros, ya que trabajan con las comunidades locales para definir las necesidades y desarrollar soluciones para reducir las vulnerabilidades y fortalecer la resiliencia comunitaria."
-  text2e:     "Lugar de Evaluación de la Vulnerabilidad y Capacidad de la FICR"
-  ifrcUrl: http://www.ifrc.org/vca
-
-resources:
-  resources:  "Recursos"
-  guidelines: "Directrices para el Análisis de Vulnerabilidad y Capacidad"
-  guidelines-url: "http://www.ifrc.org/Global/Publications/disasters/vca/Vca_en.pdf"
-  whatIs: "¿Qué es un AVC?"
-  whatIs-url: "http://www.ifrc.org/Global/Publications/disasters/vca/whats-vca-sp.pdf"
-  howTo: "¿Cómo realizar un AVC?"
-  howTo-url: "http://www.ifrc.org/Global/Publications/disasters/vca/how-to-do-vca-sp.pdf"
-  trainingGuide:  "Guía de capacitación del AVC"
-  trainingGuide-url: "http://www.ifrc.org/Global/Publications/disasters/vca/vca-training-guide-es.pdf"
-  toolbox:  "Herramientas para el AVC"
-  toolbox-url:  "http://www.ifrc.org/Global/Publications/disasters/vca/vca-toolbox-es.pdf"
 
 find:
   header:     "Buscar"
