@@ -338,6 +338,8 @@ app.use(passport.session());
 
 app.engine('handlebars', exphbs({
   defaultLayout: 'main',
+  partialsDir: './views/partials',
+  layoutsDir: './views/layouts',
   helpers: {
     eq: function(v1,v2,options) {
 			if (v1 && v2 && v1.toString() === v2.toString()) {
