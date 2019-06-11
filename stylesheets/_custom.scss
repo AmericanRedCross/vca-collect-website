@@ -82,6 +82,9 @@ body {
   padding: rem-calc(10 20);
   font-size: 1.3rem;
 }
+.dropdown.menu > li > a {
+    background: none;
+}
 
 .action-text {
     cursor: pointer;
