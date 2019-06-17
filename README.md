@@ -19,6 +19,8 @@
 ## new languages for document metadata
 - need to manually add the option to html on both `share.handlebars` and `adminDocs.handlebars`
 
+## export the documents records table
+- `sqlite3 -header -csv ./site.db "select * from documents;" > ./documents20190613.csv`
 
 ### TODO
 - https://github.com/AmericanRedCross/vca-collect-website/issues/1
