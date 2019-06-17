@@ -12,7 +12,7 @@
 - install [PM2](https://github.com/Unitech/pm2) `sudo npm install pm2 -g`
   - other tools will let you keep the application up and running on your server (e.g. [Forever](https://github.com/foreverjs/forever))
   - to have the app restart itself after a reboot, server downtime, etc., you can generate a startup script... check the [PM2 documentation](https://github.com/Unitech/pm2#startup-script-generation) on this for more details
-- `pm2 start app.js`
+- `pm2 start app.js` or something like `pm2 start app.js --name="vca_3002" --interpreter=/home/ubuntu/.nvm/versions/node/v10.16.0/bin/node`
 - login (user: me / pass: 123), create a new user, and delete the default
 - if using nginx you'll likely need to add `client_max_body_size 50M;` or whatever size value
 
