@@ -399,18 +399,44 @@ french.use(function(req, res, next) {
 // # HOME
 english.get('/', function(req, res) {
 	res.render('home',{
+    page: "home",
     settings: settings.page,
     text: req.language
 	});
 });
 spanish.get('/', function(req, res) {
 	res.render('home',{
+    page: "home",
     settings: settings.page,
     text: req.language
 	});
 });
 french.get('/', function(req, res) {
 	res.render('home',{
+    page: "home",
+    settings: settings.page,
+    text: req.language
+	});
+});
+
+// # GLOBAL TRENDS
+english.get('/trends', function(req, res) {
+	res.render('trends',{
+    page: "trends",
+    settings: settings.page,
+    text: req.language
+	});
+});
+spanish.get('/trends', function(req, res) {
+	res.render('trends',{
+    page: "trends",
+    settings: settings.page,
+    text: req.language
+	});
+});
+french.get('/trends', function(req, res) {
+	res.render('trends',{
+    page: "trends",
     settings: settings.page,
     text: req.language
 	});
@@ -419,18 +445,67 @@ french.get('/', function(req, res) {
 // # FIND
 english.get('/find', function(req, res) {
 	res.render('find',{
+    page: "find",
     settings: settings.page,
     text: req.language
 	});
 });
 spanish.get('/buscar', function(req, res) {
 	res.render('find',{
+    page: "find",
     settings: settings.page,
     text: req.language
 	});
 });
 french.get('/trouver', function(req, res) {
 	res.render('find',{
+    page: "find",
+    settings: settings.page,
+    text: req.language
+	});
+});
+
+// # EXPLORE
+english.get('/explore', function(req, res) {
+	res.render('explore',{
+    page: "explore",
+    settings: settings.page,
+    text: req.language
+	});
+});
+spanish.get('/explore', function(req, res) {
+	res.render('explore',{
+    page: "explore",
+    settings: settings.page,
+    text: req.language
+	});
+});
+french.get('/explore', function(req, res) {
+	res.render('explore',{
+    page: "explore",
+    settings: settings.page,
+    text: req.language
+	});
+});
+
+// # PROFILES
+english.get('/profiles', function(req, res) {
+	res.render('profiles',{
+    page: "profiles",
+    settings: settings.page,
+    text: req.language
+	});
+});
+spanish.get('/profiles', function(req, res) {
+	res.render('profiles',{
+    page: "profiles",
+    settings: settings.page,
+    text: req.language
+	});
+});
+french.get('/profiles', function(req, res) {
+	res.render('profiles',{
+    page: "profiles",
     settings: settings.page,
     text: req.language
 	});
@@ -439,18 +514,21 @@ french.get('/trouver', function(req, res) {
 // # SHARE
 english.get('/share', function(req, res) {
 	res.render('share',{
+    page: "share",
     settings: settings.page,
     text: req.language
 	});
 });
 spanish.get('/subir', function(req, res) {
 	res.render('share',{
+    page: "share",
     settings: settings.page,
     text: req.language
 	});
 });
 french.get('/participer', function(req, res) {
 	res.render('share',{
+    page: "share",
     settings: settings.page,
     text: req.language
 	});

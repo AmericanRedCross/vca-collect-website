@@ -45,6 +45,54 @@ settings.page = {
         url: "/fr/trouver"
       }
     }
+    ,trends: {
+      en: {
+        id: "link-trends",
+        text: "Global Trends",
+        url: "/trends"
+      }
+      ,es: {
+        id: "link-trends",
+        text: "Global Trends",
+        url: "/es/trends"
+      },fr: {
+        id: "link-trends",
+        text: "Global Trends",
+        url: "/fr/trends"
+      }
+    }
+    ,explore: {
+      en: {
+        id: "link-explore",
+        text: "Explore",
+        url: "/explore"
+      }
+      ,es: {
+        id: "link-explore",
+        text: "Explore",
+        url: "/es/explore"
+      },fr: {
+        id: "link-explore",
+        text: "Explore",
+        url: "/fr/explore"
+      }
+    }
+    ,profiles: {
+      en: {
+        id: "link-profiles",
+        text: "Community Profiles",
+        url: "/profiles"
+      }
+      ,es: {
+        id: "link-profiles",
+        text: "Community Profiles",
+        url: "/es/profiles"
+      },fr: {
+        id: "link-profiles",
+        text: "Community Profiles",
+        url: "/fr/profiles"
+      }
+    }
     ,share: {
       en: {
         id: "link-share",
