@@ -11,7 +11,7 @@
   "dependencies": {
     "aws-sdk": "^2.100.0",
     "babyparse": "^0.4.6",
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.17.2",
     "connect-sqlite3": "^0.9.10",
     "cookie-parser": "^1.4.3",
