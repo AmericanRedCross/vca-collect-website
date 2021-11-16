@@ -9,7 +9,7 @@
   "author": "Dan Joseph (danbjoseph), American Red Cross",
   "license": "GPL-3.0",
   "dependencies": {
-    "aws-sdk": "^2.100.0",
+    "aws-sdk": "^2.814.0",
     "babyparse": "^0.4.6",
     "bcrypt": "^3.0.6",
     "body-parser": "^1.17.2",
