@@ -61,22 +61,6 @@ settings.page = {
         url: "/fr/trends"
       }
     }
-    ,explore: {
-      en: {
-        id: "link-explore",
-        text: "Explore",
-        url: "/explore"
-      }
-      ,es: {
-        id: "link-explore",
-        text: "Explore",
-        url: "/es/explore"
-      },fr: {
-        id: "link-explore",
-        text: "Explore",
-        url: "/fr/explore"
-      }
-    }
     ,profiles: {
       en: {
         id: "link-profiles",

@@ -3,7 +3,7 @@
 - install [Node and npm](http://nodejs.org/)
 - clone the git repository
 - use node version manager
-  - `nvm install 6.11.2` and `nvm use`
+  - `nvm install 10.16.0` and `nvm use`
 - `npm install` to get all the node modules
 - install Gulp `npm install -g gulp`
 - compile sass and build static site with default gulp task `gulp`
