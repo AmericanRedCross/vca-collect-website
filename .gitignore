@@ -1,21 +1,6 @@
-node_modules
-notes/*
-site.db
-sessions
-public/fonts/*
-!public/fonts/README.md
-public/css/gulp.css
-test.js
-
-# OS generated files #
-######################
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-Icon?
-ehthumbs.db
-Thumbs.db
-.cache
+# System files
 .project
+.DS_Store
+.sass-cache
+.bundle
+bundle
